@@ -1,11 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/BestUser.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/presentation/screen/AllPlayers.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/stories_list.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/switch_button.dart';
 import 'package:nadek/presentation/screen/PlaygroundMaps.dart';
 import 'package:nadek/presentation/screen/ProfileOfUser.dart';
 import 'package:nadek/presentation/screen/ReservationScreen.dart';
@@ -32,6 +36,9 @@ class _MainPageState extends State<MainPage> {
   String? name;
   String? id;
 
+  int initialItem = 2;
+  int currentScrollValue = 2;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -43,7 +50,7 @@ class _MainPageState extends State<MainPage> {
 
     name = CacheHelper.getString('username');
     id = CacheHelper.getString('Id')!;
-
+    initialItem = 2;
     super.initState();
   }
 
@@ -56,24 +63,39 @@ class _MainPageState extends State<MainPage> {
     super.didChangeDependencies();
   }
 
+  List<String> nameList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
   @override
   Widget build(BuildContext context) {
+    ScrollController controller =
+        FixedExtentScrollController(initialItem: initialItem);
     return Scaffold(
-      backgroundColor: ColorApp.black_400,
+      backgroundColor: AppColors.scaffold,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ColorApp.black_400,
         toolbarHeight: 0,
-        title: const Text(
-          'الرئيسية',
-        ),
+        //  title: const SwitchButton(),
         centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            BlocProvider.of<NadekCubit>(context).openDrawers();
-          },
-          icon: const Icon(Icons.menu),
-        ),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     BlocProvider.of<NadekCubit>(context).openDrawers();
+        //   },
+        //   icon: const Icon(Icons.menu),
+        // ),
       ),
       body: ChangeInternet(
         chanegedInternt: (r) {
@@ -87,9 +109,9 @@ class _MainPageState extends State<MainPage> {
                 Expanded(
                   flex: 1,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                          child: GestureDetector(
+                      GestureDetector(
                         onTap: () {
                           Navigator.push(
                               context,
@@ -105,15 +127,13 @@ class _MainPageState extends State<MainPage> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              Container(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: Image(
-                                      width: 40,
-                                      height: 40,
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage('$photo')),
-                                ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image(
+                                    width: 40,
+                                    height: 40,
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage('$photo')),
                               ),
                               const SizedBox(
                                 width: 5,
@@ -125,22 +145,17 @@ class _MainPageState extends State<MainPage> {
                             ],
                           ),
                         ),
-                      )),
-                      const Expanded(
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Icon(
-                                  Icons.notifications,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          ],
+                      ),
+                      const SizedBox(width: 170, child: SwitchButton()),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.menu,
+                            size: 25,
+                            color: Colors.white,
+                          ),
                         ),
                       )
                     ],
@@ -153,6 +168,58 @@ class _MainPageState extends State<MainPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          height: 150,
+                          child: RotatedBox(
+                            quarterTurns: 1,
+                            child: ListWheelScrollView(
+                                itemExtent: 60,
+                                squeeze: .5,
+                                physics: const FixedExtentScrollPhysics(),
+                                diameterRatio: 1.9,
+                                perspective: 0.001,
+                                onSelectedItemChanged: (value) {
+                                  setState(() {
+                                    currentScrollValue = value;
+                                  });
+                                },
+                                controller: controller,
+                                children: <Widget>[
+                                  ...nameList.map((String name) {
+                                    return (nameList.indexOf(name) ==
+                                            currentScrollValue)
+                                        ? Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                color: CupertinoColors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: CupertinoColors
+                                                        .inactiveGray)),
+                                            padding: EdgeInsets.all(10),
+                                            child: Text(name),
+                                          )
+                                        : Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    CupertinoColors.systemGreen,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    width: 1,
+                                                    color: CupertinoColors
+                                                        .inactiveGray)),
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(name),
+                                          );
+                                  })
+                                ]),
+                          ),
+                        ),
+                        StoriesList(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,

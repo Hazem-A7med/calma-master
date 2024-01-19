@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 
-
-class TapBarWidget extends StatefulWidget {
-  const TapBarWidget({Key? key}) : super(key: key);
+class SwitchButton extends StatefulWidget {
+  const SwitchButton({Key? key}) : super(key: key);
 
   @override
-  State<TapBarWidget> createState() => _TapBarWidgetState();
+  State<SwitchButton> createState() => _SwitchButtonState();
 }
 
-class _TapBarWidgetState extends State<TapBarWidget> {
-  double width = 300.0;
-  double height = 60.0;
+class _SwitchButtonState extends State<SwitchButton> {
+  double width = 170.0;
+  double height = 40.0;
   double loginAlign = -1;
   double signInAlign = 1;
   Color selectedColor = Colors.white;
-  Color normalColor =  Colors.white;
+  Color normalColor = Colors.white;
 
   late double xAlign;
   late Color loginColor;
@@ -31,14 +30,14 @@ class _TapBarWidgetState extends State<TapBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.only(top: 15),
       child: Container(
         width: width,
         height: height,
         decoration: const BoxDecoration(
-          color: Colors.deepOrange,
+          color: Color(0xff626262),
           borderRadius: BorderRadius.all(
-            Radius.circular(25.0),
+            Radius.circular(10.0),
           ),
         ),
         child: Stack(
@@ -50,9 +49,16 @@ class _TapBarWidgetState extends State<TapBarWidget> {
                 width: width * 0.5,
                 height: height,
                 decoration: const BoxDecoration(
-                  color: Colors.green,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xffE11717),
+                      Color(0xffDA552B),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                   borderRadius: BorderRadius.all(
-                    Radius.circular(25.0),
+                    Radius.circular(10.0),
                   ),
                 ),
               ),
@@ -74,7 +80,7 @@ class _TapBarWidgetState extends State<TapBarWidget> {
                   color: Colors.transparent,
                   alignment: Alignment.center,
                   child: Text(
-                    'yyyyy',
+                    'رياضة الكل',
                     style: TextStyle(
                       color: loginColor,
                       fontWeight: FontWeight.bold,
@@ -101,7 +107,7 @@ class _TapBarWidgetState extends State<TapBarWidget> {
                   color: Colors.transparent,
                   alignment: Alignment.center,
                   child: Text(
-                    'llll',
+                    'رياضتي',
                     style: TextStyle(
                       color: signInColor,
                       fontWeight: FontWeight.bold,

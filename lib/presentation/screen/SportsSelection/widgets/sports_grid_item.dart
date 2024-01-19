@@ -24,7 +24,8 @@ class _SportsGridItemState extends State<SportsGridItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTab,
-      child: Container(padding: EdgeInsets.all((widget.isSelected)?1:0),
+      child: Container(
+        padding: EdgeInsets.all((widget.isSelected) ? 1 : 0),
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -44,23 +45,19 @@ class _SportsGridItemState extends State<SportsGridItem> {
               color: AppColors.scaffold,
               border: Border.all(width: 1, color: Colors.white12)),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
-                height: 40,
-              ),
+              const SizedBox(),
+              const SizedBox(),
               Image.network(widget.imagePath, height: 70),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(),
               Text(
                 widget.name,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     color: Colors.white.withOpacity(.4), fontSize: 18),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(),
             ],
           ),
         ),

@@ -132,7 +132,7 @@ class _login_userState extends State<login_user> {
                       title: 'الاسم',
                       controller: _controller_phone,
                       hint: 'ادخل اسمك هنا',
-                      textInputType: TextInputType.phone,
+                      textInputType: TextInputType.name,
                       icon: Icons.person,
                       function: (value) {
                         if (value.isEmpty) {
