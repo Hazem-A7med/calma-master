@@ -105,7 +105,9 @@ class _sports_selectionState extends State<sports_selection> {
                     value.setString('instagram', '${register.data?.instagram}');
 
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/Home_screen', (route) => false);
+                        context, '/MainPage', (route) => false);
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //     context, '/Home_screen', (route) => false);
                   });
                 } else {
                   Fluttertoast.showToast(

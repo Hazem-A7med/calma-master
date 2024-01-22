@@ -8,6 +8,8 @@ import 'package:nadek/data/model/BestUser.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/presentation/screen/AllPlayers.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/create_post_widget.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/stories_list.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/switch_button.dart';
 import 'package:nadek/presentation/screen/PlaygroundMaps.dart';
@@ -20,6 +22,15 @@ import 'package:nadek/sheard/ChangeInternet.dart';
 import 'package:nadek/sheard/component/component.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/Clubs/Clubs.dart';
+
+import '../Champions/Champions.dart';
+import '../Groups/Groups_Page.dart';
+import '../Home_Page.dart';
+import '../Make_Video_Page.dart';
+import '../Profile_Page.dart';
+import '../Shopping/Shop_Page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -44,10 +55,9 @@ class _MainPageState extends State<MainPage> {
     // TODO: implement initState
     token = CacheHelper.getString('tokens');
     // BlocProvider.of<NadekCubit>(context).GetBestUser(token: token!);
-
+    _getLocation();
     photo = CacheHelper.getString('photo').toString().replaceAll('\'', '');
     photo = 'https://calmaapp.com/default.png';
-
     name = CacheHelper.getString('username');
     id = CacheHelper.getString('Id')!;
     initialItem = 2;
@@ -62,7 +72,7 @@ class _MainPageState extends State<MainPage> {
     );
     super.didChangeDependencies();
   }
-
+  GlobalKey<ScaffoldState> globalDrawer = GlobalKey();
   List<String> nameList = [
     "Jan",
     "Feb",
@@ -82,27 +92,23 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     ScrollController controller =
         FixedExtentScrollController(initialItem: initialItem);
-    return Scaffold(
+    return Scaffold(key: globalDrawer,
       backgroundColor: AppColors.scaffold,
+      endDrawer: drawer(),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: ColorApp.black_400,
         toolbarHeight: 0,
-        //  title: const SwitchButton(),
         centerTitle: true,
-        // leading: IconButton(
-        //   onPressed: () {
-        //     BlocProvider.of<NadekCubit>(context).openDrawers();
-        //   },
-        //   icon: const Icon(Icons.menu),
-        // ),
       ),
       body: ChangeInternet(
         chanegedInternt: (r) {
           BlocProvider.of<NadekCubit>(context).GetBestUser(token: token!);
         },
         child: BlocConsumer<NadekCubit, NadekState>(
-          listener: (context, state) {},
+          listener: (context, state) {if (state is OpenDrawer) {
+            globalDrawer.currentState!.openEndDrawer();
+          }},
           builder: (context, state) {
             return Column(
               children: [
@@ -127,14 +133,7 @@ class _MainPageState extends State<MainPage> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image(
-                                    width: 40,
-                                    height: 40,
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage('$photo')),
-                              ),
+                              CircleAvatar(backgroundImage: NetworkImage('$photo')),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -147,14 +146,20 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                       const SizedBox(width: 170, child: SwitchButton()),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Icon(
-                            Icons.menu,
-                            size: 25,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.menu,
+                              size: 25,
+                            ),
                             color: Colors.white,
+                            onPressed: () {
+                              BlocProvider.of<NadekCubit>(context)
+                                  .openDrawers();
+                            },
                           ),
                         ),
                       )
@@ -173,8 +178,8 @@ class _MainPageState extends State<MainPage> {
                           child: RotatedBox(
                             quarterTurns: 1,
                             child: ListWheelScrollView(
-                                itemExtent: 60,
-                                squeeze: .5,
+                                itemExtent: 100,
+                                squeeze: .7,
                                 physics: const FixedExtentScrollPhysics(),
                                 diameterRatio: 1.9,
                                 perspective: 0.001,
@@ -189,7 +194,8 @@ class _MainPageState extends State<MainPage> {
                                     return (nameList.indexOf(name) ==
                                             currentScrollValue)
                                         ? Container(
-                                            width: double.infinity,
+                                            height: 100,
+                                            width: 100,
                                             decoration: BoxDecoration(
                                                 color: CupertinoColors.white,
                                                 borderRadius:
@@ -198,11 +204,12 @@ class _MainPageState extends State<MainPage> {
                                                     width: 1,
                                                     color: CupertinoColors
                                                         .inactiveGray)),
-                                            padding: EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(10),
                                             child: Text(name),
                                           )
                                         : Container(
-                                            width: double.infinity,
+                                            height: 40,
+                                            width: 40,
                                             decoration: BoxDecoration(
                                                 color:
                                                     CupertinoColors.systemGreen,
@@ -219,7 +226,9 @@ class _MainPageState extends State<MainPage> {
                                 ]),
                           ),
                         ),
-                        StoriesList(),
+                        const StoriesList(),
+                        const CreatePostWidget(),
+                        const PostItem(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -578,4 +587,192 @@ class _MainPageState extends State<MainPage> {
           )),
     );
   }
+
+  Widget drawer() {
+    List<DrawerData> drawerData = [
+      DrawerData(
+        'الرئيسية',
+            () {
+          Navigator.pop(context);
+          Navigator.popAndPushNamed(context, '/MainPage');
+        },
+        Icon(Icons.home_filled,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'المجموعات',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const groups_page()));
+        },
+         Icon(Icons.group,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'انتاج فيديوهات',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const make_video_page()));
+        },
+         Icon(Icons.video_collection_sharp,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'الحساب',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const profile_page()));
+        },
+         Icon(Icons.person,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'الفيديوهات',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const home_page()));
+        },
+         Icon(Icons.video_collection,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'صرح',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const Champions()));
+        },
+         Icon(Icons.diamond,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'البطولات',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const Clubs()));
+        },
+         Icon(Icons.people_alt_outlined,color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'المتجر',
+            () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const shop_page()));
+        },
+         Icon(Icons.shopping_cart,color: Colors.white.withOpacity(.4)),
+      ),
+    ];
+    return Drawer(
+        backgroundColor: AppColors.scaffold,
+        child: Column(
+          children: [
+            const SizedBox(height: 90),
+             Image.asset('assets/images/logo.png',width: 90,),
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.only(top: 10,right: 10,left: 10),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: drawerData[index].action,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        drawerData[index].icon,
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Text(drawerData[index].title,
+                            style: TextStyle(color: Colors.white.withOpacity(.4))),
+                        const Expanded(child: SizedBox())
+                      ],
+                    ),
+                  ),
+                ),
+                itemCount: drawerData.length,
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.white.withOpacity(.3),
+                ),
+                //children: [
+                // ListTile(
+                //   title: Text("المجموعات", style: TextStyle(color: Colors.white)),
+                //   leading: Icon(
+                //     Icons.chat,
+                //     color: Colors.white,
+                //   ),
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     Navigator.push(
+                //         context, MaterialPageRoute(builder: (c) => groups_page()));
+                //   },
+                // ),
+                // ListTile(
+                //   title:
+                //       Text("انتاج فيديوهات", style: TextStyle(color: Colors.white)),
+                //   leading: Icon(Icons.video_collection_sharp, color: Colors.white),
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     Navigator.push(context,
+                //         MaterialPageRoute(builder: (c) => make_video_page()));
+                //   },
+                // ),
+                // ListTile(
+                //   title: Text(
+                //     "الحساب",
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                //   leading: Icon(Icons.person, color: Colors.white),
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     Navigator.push(
+                //         context, MaterialPageRoute(builder: (c) => profile_page()));
+                //   },
+                // )
+                //  ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  _getLocation() async {
+    await Geolocator.requestPermission();
+    if (await Permission.location.isPermanentlyDenied) {
+      // The user opted to never again see the permission request dialog for this
+      // app. The only way to change the permission's status now is to let the
+      // user manually enable it in the system settings.
+      print('isDenied');
+    } else {
+      [
+        Permission.location,
+        Permission.locationAlways,
+        Permission.locationWhenInUse
+      ].request();
+
+      if (await Permission.location.isDenied) {
+        //   Navigator.pop(context);
+      } else {
+        if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
+          await Geolocator.requestPermission();
+          final Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+          );
+          setState(() {
+            BlocProvider.of<NadekCubit>(context).UpdateLocationUser(
+                lit: position.latitude,
+                long: position.longitude,
+                token: token!);
+            print('${position.latitude} \n ${position.longitude}');
+          });
+        }
+      }
+    }
+  }
+}
+
+class DrawerData {
+  String title;
+  Function() action;
+  Icon icon;
+
+  DrawerData(this.title, this.action, this.icon);
 }

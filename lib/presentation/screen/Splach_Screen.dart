@@ -62,7 +62,8 @@ class _splach_screenState extends State<splach_screen> {
         if (token == null) {
           return await isFirstOpen() ? '/login_user' : '/View_pager';
         } else {
-          return '/Home_screen';
+          return '/MainPage';
+         // return '/Home_screen';
         }
       },
     );

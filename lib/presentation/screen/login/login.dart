@@ -78,7 +78,8 @@ class _login_userState extends State<login_user> {
                 });
               });
 
-              Navigator.popAndPushNamed(context, '/Home_screen');
+              Navigator.popAndPushNamed(context, '/MainPage');
+             // Navigator.popAndPushNamed(context, '/Home_screen');
             }
           });
         }

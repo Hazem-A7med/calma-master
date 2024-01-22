@@ -6,6 +6,7 @@ import 'package:nadek/presentation/screen/BestUsers.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Groups/AddUser.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Groups/Chats.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Groups/create_group.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/MainPage.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Shopping/cart.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Shopping/show_item.dart';
 import 'package:nadek/presentation/screen/FollowMe.dart';
@@ -41,6 +42,8 @@ class App_Routeing {
         return MaterialPageRoute(builder: (_) => const splach_screen());
       case '/Home_screen':
         return MaterialPageRoute(builder: (_) => const Home_Screen());
+        case '/MainPage':
+        return MaterialPageRoute(builder: (_) => const MainPage());
       case '/View_pager':
         return MaterialPageRoute(builder: (_) => view_pager_screen());
       case '/Create_Account':

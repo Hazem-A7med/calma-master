@@ -38,6 +38,7 @@ class _State extends State<Home_Screen> {
     Clubs(),
     shop_page(),
   ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -60,7 +61,7 @@ class _State extends State<Home_Screen> {
   Widget build(BuildContext context) {
     return BlocConsumer<NadekCubit, NadekState>(listener: (context, state) {
       if (state is OpenDrawer) {
-        globalDrawer.currentState!.openDrawer();
+        globalDrawer.currentState!.openEndDrawer();
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -104,6 +105,7 @@ class _State extends State<Home_Screen> {
         ),
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
+
         bottomNavigationBar: Container(
           height: 110,
           decoration: const BoxDecoration(
@@ -173,55 +175,158 @@ class _State extends State<Home_Screen> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
-        drawer: drawer(),
+        endDrawer: drawer(),
       );
     });
   }
 
+//  List<Widget> page = const [
+//     home_page(),
+//     Champions(),
+//     MainPage(),
+//     Clubs(),
+//     shop_page(),
+//   ];
   Widget drawer() {
+    List<DrawerData> drawerData = [
+      DrawerData(
+        'المجموعات',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const groups_page()));
+        },
+        const Icon(Icons.abc),
+      ),
+      DrawerData(
+        'انتاج فيديوهات',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => make_video_page()));
+        },
+        const Icon(Icons.video_collection_sharp),
+      ),
+      DrawerData(
+        'الحساب',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const profile_page()));
+        },
+        const Icon(Icons.person),
+      ),
+      DrawerData(
+        'الفيديوهات',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const home_page()));
+        },
+        const Icon(Icons.video_collection),
+      ),
+      DrawerData(
+        'صرح',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const Champions()));
+        },
+        const Icon(Icons.diamond),
+      ),
+      DrawerData(
+        'الرئيسية',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const MainPage()));
+        },
+        const Icon(Icons.home_filled),
+      ),
+      DrawerData(
+        'البطولات',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const Clubs()));
+        },
+        const Icon(Icons.people_alt_outlined),
+      ),
+      DrawerData(
+        'المتجر',
+        () {
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (c) => const shop_page()));
+        },
+        const Icon(Icons.shopping_cart),
+      ),
+    ];
     return Drawer(
         backgroundColor: ColorApp.black_400,
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text("المجموعات", style: TextStyle(color: Colors.white)),
-              leading: Icon(
-                Icons.chat,
-                color: Colors.white,
+        child: ListView.separated(
+          padding: EdgeInsets.all(10),
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: drawerData[index].action,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  drawerData[index].icon,
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(drawerData[index].title,
+                      style: TextStyle(color: Colors.white.withOpacity(.4))),
+                  Expanded(child: SizedBox())
+                ],
               ),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (c) => groups_page()));
-              },
             ),
-            ListTile(
-              title:
-                  Text("انتاج فيديوهات", style: TextStyle(color: Colors.white)),
-              leading: Icon(Icons.video_collection_sharp, color: Colors.white),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (c) => make_video_page()));
-              },
-            ),
-            ListTile(
-              title: Text(
-                "الحساب",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: Icon(Icons.person, color: Colors.white),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (c) => profile_page()));
-              },
-            )
-          ],
+          ),
+          itemCount: drawerData.length,
+          separatorBuilder: (context, index) => Divider(
+            color: Colors.white.withOpacity(.3),
+          ),
+          //children: [
+          // ListTile(
+          //   title: Text("المجموعات", style: TextStyle(color: Colors.white)),
+          //   leading: Icon(
+          //     Icons.chat,
+          //     color: Colors.white,
+          //   ),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //         context, MaterialPageRoute(builder: (c) => groups_page()));
+          //   },
+          // ),
+          // ListTile(
+          //   title:
+          //       Text("انتاج فيديوهات", style: TextStyle(color: Colors.white)),
+          //   leading: Icon(Icons.video_collection_sharp, color: Colors.white),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (c) => make_video_page()));
+          //   },
+          // ),
+          // ListTile(
+          //   title: Text(
+          //     "الحساب",
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          //   leading: Icon(Icons.person, color: Colors.white),
+          //   onTap: () {
+          //     Navigator.pop(context);
+          //     Navigator.push(
+          //         context, MaterialPageRoute(builder: (c) => profile_page()));
+          //   },
+          // )
+          //  ],
         ));
   }
 
@@ -258,4 +363,12 @@ class _State extends State<Home_Screen> {
       }
     }
   }
+}
+
+class DrawerData {
+  String title;
+  Function() action;
+  Icon icon;
+
+  DrawerData(this.title, this.action, this.icon);
 }
