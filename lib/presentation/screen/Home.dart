@@ -12,7 +12,7 @@ import 'package:nadek/presentation/screen/BottombarScreen/Groups/Groups_Page.dar
 import 'package:nadek/presentation/screen/BottombarScreen/Home_Page.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/MainPage.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Make_Video_Page.dart';
-import 'package:nadek/presentation/screen/BottombarScreen/Profile_Page.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/profile_page/Profile_Page.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Shopping/Shop_Page.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
