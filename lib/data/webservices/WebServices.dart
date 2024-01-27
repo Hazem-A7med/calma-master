@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:nadek/data/model/AddClub.dart';
 import 'package:nadek/data/model/AddTournament.dart';
@@ -41,6 +43,10 @@ import 'package:nadek/data/model/register_model.dart';
 import 'package:nadek/data/model/sports.dart';
 import 'package:nadek/presentation/screen/virtualTournments/virtual_methods.dart';
 
+import '../model/stories_model.dart';
+import '../model/stories_model.dart';
+import '../model/stories_model.dart';
+
 class Web_Services {
   late Dio dio;
 
@@ -51,6 +57,44 @@ class Web_Services {
       connectTimeout: const Duration(minutes: 1),
       receiveTimeout: const Duration(minutes: 1),
     ));
+  }
+
+  Future<List<Story>> getMyStoriesData({required String token,}) async {
+    print('1111111111111111111111111111111111111111');
+    dio.options.headers['Authorization'] = ' Bearer $token';
+    try { print('1111111111111111111111111111111111111111');
+      Response response = await dio.get('community/stories/my-stories');
+    print('1111111111111111111111111111111111111111');
+      if (response.statusCode == 200) { print('2222222222222222222222222222222222222222');
+        if (response.headers.map['content-type']?.first == 'application/json') {
+          Map<String, dynamic> responseData = json.decode(response.data.toString());
+          StoriesModel storiesModel = StoriesModel.fromJson(responseData);
+          List<Story> stories = storiesModel.response.values.toList();
+          print('33333333333333333333333333333333333333333333333333333333');
+          return stories;
+                } else {
+          print('Error: Unexpected content type in response');
+          return [];
+        }
+      } else {
+        print('Error: Non-200 status code');
+        return [];
+      }
+    }on DioError catch (e) {
+      if (e.response != null) {
+        print('Dio Error!');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('HEADERS: ${e.response?.headers}');
+      } else {
+        print('Error send request!');
+        print(e.message);
+      }
+      return [];
+    } catch (e) {
+      print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee${e.toString()}');
+      return [];
+    }
   }
 
   Future<void> logout({
@@ -383,7 +427,8 @@ class Web_Services {
 
   Future<dynamic> GetProfileOfUser(
       {required int user_id, required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    print(user_id);
     Response response =
         await dio.get('profile', queryParameters: {'user_id': user_id});
     print(response.data);

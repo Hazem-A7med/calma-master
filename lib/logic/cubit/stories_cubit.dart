@@ -1,30 +1,23 @@
-import 'package:dio/dio.dart';
-
+import 'package:bloc/bloc.dart';
 import '../../data/model/stories_model.dart';
+import '../../data/webservices/WebServices.dart';
+import '../../sheard/constante/cache_hleper.dart';
+import '../states/stories_states.dart';
 
-class ApiService {
-  final Dio _dio = Dio();
 
-  Future<List<Story>> getStoriesData() async {
-    //try {
-      Response response = await _dio.get('YOUR_API_ENDPOINT'); // Replace with your actual API endpoint
+class StoriesCubit extends Cubit<StoriesState> {
+  final Web_Services apiService = Web_Services();
 
-      if (response.statusCode == 200) {
-        StoriesModel apiResponse = StoriesModel.fromJson(response.data);
-        return apiResponse.response.values.toList();
-      } else {
-        throw DioError(
-         // request: response.requestOptions,
-          response: response,
-          error: 'Failed to load stories data', requestOptions: response.requestOptions,
-        );
-      }
-    // }
-      // catch (error) {
-    //   throw DioError(
-    //     request: RequestOptions(path: 'YOUR_API_ENDPOINT'), // Replace with your actual API endpoint
-    //     error: 'Failed to load stories data: $error',
-    //   );
-    // }
+  StoriesCubit() : super(StoriesInitialState());
+
+  void fetchMyStories() async {
+    emit(StoriesLoadingState());
+
+    try {
+      List<Story> stories = await apiService.getMyStoriesData(token: CacheHelper.getString('tokens')??'');
+      emit(StoriesLoadedState(stories: stories));
+    } catch (error) {
+      emit(StoriesErrorState(error: 'Failed to load stories: $error'));
+    }
   }
 }

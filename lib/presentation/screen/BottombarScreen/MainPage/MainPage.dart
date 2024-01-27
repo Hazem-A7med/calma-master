@@ -9,6 +9,7 @@ import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/create_post_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/stories_list.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/switch_button.dart';
 import 'package:nadek/presentation/screen/PlaygroundMaps.dart';
 import 'package:nadek/presentation/screen/ProfileOfUser.dart';

@@ -130,11 +130,11 @@ class _login_userState extends State<login_user> {
                     height: 50,
                   ),
                   Component_App.InputText(
-                      title: 'الاسم',
+                      title: 'رقم الهاتف',
                       controller: _controller_phone,
-                      hint: 'ادخل اسمك هنا',
-                      textInputType: TextInputType.name,
-                      icon: Icons.person,
+                      hint: 'ادخل رقم الهاتف',
+                      textInputType: TextInputType.phone,
+                      icon: Icons.phone,
                       function: (value) {
                         if (value.isEmpty) {
                           return "ادخل رقم الهاتف";

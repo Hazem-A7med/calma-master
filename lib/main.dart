@@ -9,6 +9,7 @@ import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/repository/repository.dart';
 import 'package:nadek/data/webservices/WebServices.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
+import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/presentation/App_Route.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 
@@ -29,20 +30,30 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final App_Routeing app_routeing;
+
   const MyApp({Key? key, required this.app_routeing}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ConnectionNotifier(
-      child: BlocProvider(
-        create: (context) => NadekCubit(repository(Web_Services())),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => NadekCubit(repository(Web_Services())),
+          ),BlocProvider(
+            create: (context) => StoriesCubit(),
+          ),
+        ],
         child: MaterialApp(
           title: 'Calma',
-          theme: ThemeData(scaffoldBackgroundColor: AppColors.scaffold,
+          theme: ThemeData(
+            scaffoldBackgroundColor: AppColors.scaffold,
             fontFamily: 'Schyler',
             appBarTheme: const AppBarTheme(
               titleTextStyle: TextStyle(
-                color: Colors.white,fontFamily: 'Schyler',
+                color: Colors.white,
+                fontFamily: 'Schyler',
               ),
               iconTheme: IconThemeData(
                 color: Colors.white,
