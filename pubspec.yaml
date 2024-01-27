@@ -58,6 +58,7 @@ dependencies:
   flutter_phoenix: ^1.1.1
   country_code_picker: ^3.0.0
   flutter_advanced_drawer: ^1.3.5
+  equatable:
 
 dev_dependencies: 
   flutter_lints: ^2.0.1
