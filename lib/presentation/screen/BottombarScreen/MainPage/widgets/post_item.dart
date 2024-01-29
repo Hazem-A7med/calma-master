@@ -23,20 +23,11 @@ class _PostItemState extends State<PostItem> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Image.asset(
-                    'assets/icons/x.png',
-                    width: 10,
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.more_horiz,
-                    color: Colors.white.withOpacity(.7),
-                    size: 16,
-                  ),
-                ]),
+                Icon(
+                  Icons.more_horiz,
+                  color: Colors.white.withOpacity(.7),
+                  size: 20,
+                ),
                 Row(
                   children: [
                     Column(

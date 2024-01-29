@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/FollowersModel.dart';
@@ -11,10 +12,8 @@ import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/creat
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/profile_page/widgets/first_icons_row.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/profile_page/widgets/sec_icons_row.dart';
-import 'package:nadek/sheard/component/component.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
-import 'package:nadek/sheard/style/ColorApp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 class profile_page extends StatefulWidget {
@@ -108,7 +107,7 @@ class _profile_pageState extends State<profile_page> {
                         collapseMode: CollapseMode.parallax,
                         centerTitle: true,
                         titlePadding: const EdgeInsets.only(bottom: 70),
-                        title: const CircleAvatar(
+                        title: CircleAvatar(
                           radius: 40,
                           backgroundColor: Color(0xffE11717),
                           child: Padding(
@@ -116,7 +115,7 @@ class _profile_pageState extends State<profile_page> {
                             child: CircleAvatar(
                               radius: 40,
                               backgroundImage: NetworkImage(
-                                  'https://img.freepik.com/free-photo/front-view-woman-posing-futuristic-portrait_23-2151179031.jpg'),
+                                  profileModel!.data!.myData!.photo.toString()),
                             ),
                           ),
                         ),
@@ -126,8 +125,8 @@ class _profile_pageState extends State<profile_page> {
                           child: Column(children: [
                             Expanded(
                               flex: 4,
-                              child: Image.network(
-                                  'https://img.freepik.com/free-photo/front-view-woman-posing-futuristic-portrait_23-2151179031.jpg',
+                              child: Image.asset(
+                                  'assets/images/page_1.png',
                                   width: double.infinity,
                                   fit: BoxFit.cover),
                             ),
@@ -137,8 +136,8 @@ class _profile_pageState extends State<profile_page> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text(
-                                    'Cristiano Ronaldo',
+                                  Text(
+                                    profileModel!.data!.myData!.name!,
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   Text(
@@ -173,7 +172,7 @@ class _profile_pageState extends State<profile_page> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return PostItem();
+                          return const PostItem();
                         },
                         childCount: 20,
                       ),

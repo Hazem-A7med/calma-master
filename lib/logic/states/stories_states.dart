@@ -1,9 +1,6 @@
-// stories_state.dart
 import 'package:equatable/equatable.dart';
 
 import '../../data/model/stories_model.dart';
-
-
 
 abstract class StoriesState extends Equatable {
   const StoriesState();

@@ -155,7 +155,7 @@ class _LivePageState extends State<LivePage> {
   }
 
   Future<LiveChannelToken> getRTCToken(String token, String channelName) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     FormData data = FormData.fromMap({
       'channelName': channelName,

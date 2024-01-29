@@ -1,7 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/creat_post_screen.dart';
+
+import '../../../../../sheard/constante/cache_hleper.dart';
+import '../../../virtualTournments/virtual_tournments_list.dart';
 
 class CreatePostWidget extends StatefulWidget {
-  const CreatePostWidget({Key? key}) : super(key: key);
+  const CreatePostWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CreatePostWidget> createState() => _CreatePostWidgetState();
@@ -18,44 +26,100 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             children: [
               Expanded(
                   child: Column(
-                    children: [
-                      TextField(
-                                      enabled: false,
-                                      decoration: InputDecoration(hintTextDirection: TextDirection.rtl,
-                        hintText: 'ما الذي يدور في ذهنك,أحمد ؟',
-                        hintStyle: TextStyle(
-                            fontSize: 14, color: Colors.white.withOpacity(.4))),
-                                    ),Container(height: 1,color: Colors.white.withOpacity(.4))
-                    ],
-                  )),
-              SizedBox(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreatePostScreen(),
+                        )),
+                    child: TextField(
+                      enabled: false,
+                      decoration: InputDecoration(
+                          hintTextDirection: TextDirection.rtl,
+                          hintText:
+                              'ما الذي يدور في ذهنك,${CacheHelper.getString('username')} ؟',
+                          hintStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(.4))),
+                    ),
+                  ),
+                  Container(height: 1, color: Colors.white.withOpacity(.4))
+                ],
+              )),
+              const SizedBox(
                 width: 20,
               ),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 30,
                 backgroundImage: NetworkImage(
-                    'https://img.freepik.com/free-photo/front-view-woman-posing-futuristic-portrait_23-2151179031.jpg'),
-              )
+                  CacheHelper.getString('photo')
+                      .toString()
+                      .replaceAll('\'', ''),
+                ),
+              ),
             ],
           ),
           Padding(
-            padding:  EdgeInsets.only(bottom: 15.0,left: 17,right: 17,top: 25),
+            padding: const EdgeInsets.only(
+                bottom: 15.0, left: 17, right: 17, top: 25),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-              Row(children: [Text('المشاعر/الأنشطة',style: TextStyle(color: Colors.white.withOpacity(.3),fontSize: MediaQuery.of(context).size.width*.025)),
-                SizedBox(width: 10,),
-                Image.asset('assets/icons/smile.png',height: 20),],),
-              Row(children: [Text('صورة / فيديو',style: TextStyle(color: Colors.white.withOpacity(.3),fontSize:  MediaQuery.of(context).size.width*.025)),
-                SizedBox(width: 10,),
-                Image.asset('assets/icons/image.png',height: 20),],),
-              Row(children: [Text('بث مباشر',style: TextStyle(color: Colors.white.withOpacity(.3),fontSize:  MediaQuery.of(context).size.width*.025)),
-                SizedBox(width: 10,),
-                Image.asset('assets/icons/live.png',height: 17),],),
-
-            ]),
+                  Row(
+                    children: [
+                      Text('المشاعر/الأنشطة',
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(.3),
+                              fontSize:
+                                  MediaQuery.of(context).size.width * .025)),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Image.asset('assets/icons/smile.png', height: 20),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('صورة / فيديو',
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(.3),
+                              fontSize:
+                                  MediaQuery.of(context).size.width * .025)),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Image.asset('assets/icons/image.png', height: 20),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VirtualTournmentsList(),
+                          ));
+                    },
+                    child: Row(
+                      children: [
+                        Text('بث مباشر',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(.3),
+                                fontSize:
+                                    MediaQuery.of(context).size.width * .025)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset('assets/icons/live.png', height: 17),
+                      ],
+                    ),
+                  ),
+                ]),
           ),
-          Container(width: double.infinity,height: 1,color: Colors.white.withOpacity(.4))
+          Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.white.withOpacity(.4))
         ]),
       ),
     );

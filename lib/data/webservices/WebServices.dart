@@ -59,48 +59,44 @@ class Web_Services {
     ));
   }
 
-  Future<List<Story>> getMyStoriesData({required String token,}) async {
-    print('1111111111111111111111111111111111111111');
-    dio.options.headers['Authorization'] = ' Bearer $token';
-    try { print('1111111111111111111111111111111111111111');
-      Response response = await dio.get('community/stories/my-stories');
-    print('1111111111111111111111111111111111111111');
-      if (response.statusCode == 200) { print('2222222222222222222222222222222222222222');
-        if (response.headers.map['content-type']?.first == 'application/json') {
-          Map<String, dynamic> responseData = json.decode(response.data.toString());
-          StoriesModel storiesModel = StoriesModel.fromJson(responseData);
-          List<Story> stories = storiesModel.response.values.toList();
-          print('33333333333333333333333333333333333333333333333333333333');
-          return stories;
-                } else {
-          print('Error: Unexpected content type in response');
-          return [];
-        }
+  Future<StoriesModel> getStoriesData({
+    required String token,
+  }) async {
+    dio.options.headers['Authorization'] = ' Bearer$token';
+    print('web begin');
+
+    try {
+      Response<String> response = await dio.get('community/stories/my-stories');
+      final responseData = json.decode(response.data ?? '{}');
+
+      print(responseData['Response']);
+      print(response.statusCode);
+      print(
+          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return StoriesModel.fromJson(responseData);
       } else {
-        print('Error: Non-200 status code');
-        return [];
+        throw DioError(
+          response: response,
+          error: 'Failed to load stories data',
+          requestOptions: response.requestOptions,
+        );
       }
-    }on DioError catch (e) {
-      if (e.response != null) {
-        print('Dio Error!');
-        print('STATUS: ${e.response?.statusCode}');
-        print('DATA: ${e.response?.data}');
-        print('HEADERS: ${e.response?.headers}');
-      } else {
-        print('Error send request!');
-        print(e.message);
-      }
-      return [];
-    } catch (e) {
-      print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee${e.toString()}');
-      return [];
+    } catch (error) {
+      print(error.toString());
+      throw DioError(
+        error: 'Failed to load stories data: ${error.toString()}',
+        requestOptions: RequestOptions(path: 'YOUR_API_ENDPOINT'),
+      );
     }
   }
 
   Future<void> logout({
     required String token,
   }) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     try {
       Response response = await dio.post('logout');
     } on DioError catch (e) {
@@ -120,7 +116,7 @@ class Web_Services {
     required String token,
     required int id,
   }) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     try {
       print('Mostafaaa: $token');
       print('Mostafaaa: $id');
@@ -220,7 +216,7 @@ class Web_Services {
   }
 
   Future<dynamic> Create_group(String token, String name, String file) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     String fileName = file.split('/').last;
 
@@ -233,7 +229,7 @@ class Web_Services {
   }
 
   Future<LiveChannelToken> getRTCToken(String token, String channelName) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     FormData data = FormData.fromMap({
       'channelName': channelName,
@@ -244,7 +240,7 @@ class Web_Services {
   }
 
   Future<dynamic> getAllRooms(String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response = await dio.get('rooms');
 
@@ -252,7 +248,7 @@ class Web_Services {
   }
 
   Future<dynamic> getPrivateVideo(String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response = await dio.get('videos');
 
@@ -262,7 +258,7 @@ class Web_Services {
   }
 
   Future<dynamic> getPublicVideo(String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response = await dio.get('home');
     return public_video.fromJson(response.data);
@@ -270,7 +266,7 @@ class Web_Services {
 
   Future<dynamic> getAllUser(
       {required int room_id, required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response =
         await dio.get('users', queryParameters: {'room_id': room_id});
@@ -279,7 +275,7 @@ class Web_Services {
   }
 
   Future<dynamic> add_room_users(int roomId, int userId, String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response = await dio
         .post('add_room_users', data: {'room_id': roomId, 'user_id': userId});
@@ -287,7 +283,7 @@ class Web_Services {
   }
 
   Future<dynamic> UpdatePhoto(String file, String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     String fileName = file.split('/').last;
 
     FormData data = FormData.fromMap({
@@ -304,7 +300,7 @@ class Web_Services {
       {required double lit,
       required double long,
       required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     Response response =
         await dio.post('account_update', data: {'lat': lit, 'long': long});
@@ -321,7 +317,7 @@ class Web_Services {
       String instagram,
       String youtube,
       String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     FormData formData = FormData.fromMap({
       'name': name,
       'berth_day': berthDay,
@@ -337,7 +333,7 @@ class Web_Services {
   }
 
   Future<dynamic> getCategories(String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('categories');
 
     return GetCategories.fromJson(response.data);
@@ -350,7 +346,7 @@ class Web_Services {
       String location,
       int sportId,
       String token) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     String fileName = file.split('/').last;
 
     FormData data = FormData.fromMap({
@@ -370,14 +366,14 @@ class Web_Services {
       {required int product_id,
       required int quantity,
       required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('add_to_cart',
         data: {'product_id': product_id, 'quantity': quantity});
     return ApiData.fromJson(response.data);
   }
 
   Future<dynamic> GetFromCart({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('cart');
     print(response.data);
     return GetCart.fromJson(response.data);
@@ -387,7 +383,7 @@ class Web_Services {
       {required int product_id,
       required int quantity,
       required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('add_to_cart',
         data: {'product_id': product_id, 'quantity': quantity});
     return ApiData.fromJson(response.data);
@@ -395,14 +391,14 @@ class Web_Services {
 
   Future<dynamic> PostMakeOrder(
       {required String location, required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.post('make_order', data: {'location': location});
     return MakeOrder.fromJson(response.data);
   }
 
   Future<dynamic> GetCount({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('cart_count');
     return ApiData.fromJson(response.data);
   }
@@ -411,7 +407,7 @@ class Web_Services {
       {required String token,
       required int video_id,
       required String comment}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('add_comment', data: {
       'video_id': video_id,
       'comment': comment,
@@ -420,14 +416,15 @@ class Web_Services {
   }
 
   Future<dynamic> GetProfile({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('profile');
     return ProfileModel.fromJson(response.data);
   }
 
   Future<dynamic> GetProfileOfUser(
       {required int user_id, required String token}) async {
-    dio.options.headers['Authorization'] = 'Bearer $token';
+    dio.options.headers['Authorization'] = 'Bearer$token';
+    print(token);
     print(user_id);
     Response response =
         await dio.get('profile', queryParameters: {'user_id': user_id});
@@ -436,21 +433,21 @@ class Web_Services {
   }
 
   Future<dynamic> GetFollowed({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('followed');
     print(response.data);
     return FollowedModel.fromJson(response.data);
   }
 
   Future<dynamic> GetFollowers({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('followers');
     return FollowersModel.fromJson(response.data);
   }
 
   Future<dynamic> GetAllComments(
       {required String token, required Map<String, dynamic> map}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('comments', queryParameters: map);
     print(response.data);
 
@@ -459,26 +456,26 @@ class Web_Services {
 
   Future<dynamic> AddLike(
       {required String token, required Map<String, dynamic> map}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('add_like', queryParameters: map);
     return LikeModel.fromJson(response.data);
   }
 
   Future<dynamic> AddFollow({required String token, required int uid}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('make_follow', data: {'user_id': uid});
     // print(response.data);
     return ApiData.fromJson(response.data);
   }
 
   Future<dynamic> GetBestUser({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('best_users');
     return BestUser.fromJson(response.data);
   }
 
   Future<dynamic> GetAllocationUser({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('users_near');
     print(response.data);
     return LocationUserModel.fromJson(response.data);
@@ -486,13 +483,13 @@ class Web_Services {
 
   Future<dynamic> StartAndEndLive(
       {required String token, required Map<String, dynamic> map}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('agora_token', queryParameters: map);
     return LiveModel.fromJson(response.data);
   }
 
   Future<dynamic> GetLiveUserNow({required String token}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('users_live');
     return LiveUserNowModel.fromJson(response.data);
   }
@@ -507,7 +504,7 @@ class Web_Services {
       {required String token,
       required String room_id,
       required String user_id}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('delete_room_user',
         data: {'room_id': room_id, 'user_id': user_id});
     print(response.data);
@@ -516,7 +513,7 @@ class Web_Services {
 
   Future<dynamic> DeleteRoom(
       {required String token, required String room_id}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('delete_room', data: {
       'room_id': room_id,
     });
@@ -526,7 +523,7 @@ class Web_Services {
 
   Future<dynamic> tournamentDetails(
       {required String token, required int id}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = 'Bearer$token';
     Response response = await dio.get('details/tournament/$id');
     print(response.data);
     return TournamentDetailsModel.fromJson(response.data);
@@ -534,7 +531,7 @@ class Web_Services {
 
   Future<dynamic> Tournaments(
       {required String token, required int page}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.get('all/tournaments', queryParameters: {'page': page});
     print(response.data);
@@ -557,7 +554,7 @@ class Web_Services {
     required String mobile,
     required String title,
   }) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('add/tournament', data: {
       'type': type,
       'payment': payment,
@@ -578,7 +575,7 @@ class Web_Services {
   }
 
   Future<dynamic> allClubs({required String token, required int page}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.get('all/clubs', queryParameters: {'page': page});
     print(response.data);
@@ -587,7 +584,7 @@ class Web_Services {
 
   Future<dynamic> registerClub(
       {required String token, required int clubId}) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.post('register/club', queryParameters: {'club_id': clubId});
     print(response.data);
@@ -596,7 +593,7 @@ class Web_Services {
 
   Future<dynamic> createClub(String token, String name, String file,
       int typeClub, int sportTypeId, String typeSubscribe) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
 
     String fileName = file.split('/').last;
 
@@ -612,7 +609,7 @@ class Web_Services {
   }
 
   Future<dynamic> getAllPlayground(String token, int page) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.get('playground/all', queryParameters: {'page': page});
     return AllPlayground.fromJson(response.data);
@@ -620,7 +617,7 @@ class Web_Services {
 
   Future<dynamic> getDetailsPlayground(
       String token, int playGroundId, String date) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.get('playground/details',
         queryParameters: {'play_ground_id': playGroundId, 'date': date});
     return DetailsPlayground.fromJson(response.data);
@@ -628,7 +625,7 @@ class Web_Services {
 
   Future<dynamic> postReservation(
       String token, int playGroundId, int reservationId) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('store/reservation', queryParameters: {
       'play_ground_id': playGroundId,
       'reservation_id': reservationId
@@ -637,7 +634,7 @@ class Web_Services {
   }
 
   Future<AllPlayersModel> getAllPlayers(String token, int page) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response =
         await dio.get('all/users', queryParameters: {'page': page});
     return AllPlayersModel.fromJson(response.data);
@@ -645,7 +642,7 @@ class Web_Services {
 
   Future<dynamic> searchModel(
       String token, String searchName, String searchValue) async {
-    dio.options.headers['Authorization'] = ' Bearer $token';
+    dio.options.headers['Authorization'] = ' Bearer$token';
     Response response = await dio.post('search/all', queryParameters: {
       'search_name': searchName,
       'search_value': searchValue

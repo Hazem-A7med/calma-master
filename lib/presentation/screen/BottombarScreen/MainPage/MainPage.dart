@@ -23,6 +23,7 @@ import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Clubs/Clubs.dart';
 
+import '../../../../logic/cubit/stories_cubit.dart';
 import '../../Maps.dart';
 import '../Champions/Champions.dart';
 import '../Groups/Groups_Page.dart';
@@ -59,6 +60,13 @@ class _MainPageState extends State<MainPage> {
     name = CacheHelper.getString('username');
     id = CacheHelper.getString('Id')!;
     initialItem = 2;
+    print('tttttttttttttttttttttttttttttttttttttttttttttttttttttttttt');
+    print(token);
+    print(token);
+    print(token);
+    print(token);
+
+
     super.initState();
   }
 
@@ -615,7 +623,7 @@ class _MainPageState extends State<MainPage> {
       DrawerData(
         'الرئيسية',
         () {
-          Navigator.pop(context);
+          //Navigator.pop(context);
           Navigator.popAndPushNamed(context, '/MainPage');
         },
         Icon(Icons.home_filled, color: Colors.white.withOpacity(.4)),

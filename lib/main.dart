@@ -25,7 +25,9 @@ void main() async {
         child: MyApp(
           app_routeing: App_Routeing(),
         ),
-      )));
+      ),
+  ),
+  );
 }
 
 class MyApp extends StatelessWidget {
