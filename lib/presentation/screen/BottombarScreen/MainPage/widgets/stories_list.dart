@@ -18,6 +18,9 @@ class StoriesList extends StatefulWidget {
 }
 
 class _StoriesListState extends State<StoriesList> {
+  List<AllStoriesResponse> allStories = [];
+  int length = 0;
+
   @override
   void initState() {
     Future.delayed(
@@ -48,7 +51,6 @@ class _StoriesListState extends State<StoriesList> {
                     builder: (BuildContext context, state) {
                     if (state is MyStoriesLoadedState) {
                       List<Story> stories = state.stories;
-
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -119,8 +121,10 @@ class _StoriesListState extends State<StoriesList> {
                 BlocBuilder<AllStoriesCubit, AllStoriesState>(
                     builder: (BuildContext context, state) {
                       if (state is AllStoriesLoadedState) {
-                        List<AllStoriesResponse> allStories = state.stories;
-
+                        allStories = state.stories;
+                        setState(() {
+                          length = allStories.length;
+                        });
                         return SizedBox(
                           width: 82,
                           child: Column(
@@ -163,7 +167,7 @@ class _StoriesListState extends State<StoriesList> {
             separatorBuilder: (context, index) => const SizedBox(
               width: 20,
             ),
-            itemCount: 1,
+            itemCount: 1+length,
           ),
         ),
       ),

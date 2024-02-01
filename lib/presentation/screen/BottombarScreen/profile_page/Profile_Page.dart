@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../data/model/my_posts_model.dart';
 import '../../../../logic/cubit/my_posts_cubit.dart';
 import '../../../../logic/states/my_posts_states.dart';
+import '../MainPage/widgets/postshimmer.dart';
 
 class profile_page extends StatefulWidget {
   const profile_page({Key? key}) : super(key: key);
@@ -96,9 +97,9 @@ class _profile_pageState extends State<profile_page> {
                         titlePadding: const EdgeInsets.only(bottom: 70),
                         title: CircleAvatar(
                           radius: 40,
-                          backgroundColor: Color(0xffE11717),
+                          backgroundColor: const Color(0xffE11717),
                           child: Padding(
-                            padding: EdgeInsets.all(1.0),
+                            padding: const EdgeInsets.all(1.0),
                             child: CircleAvatar(
                               radius: 40,
                               backgroundImage: NetworkImage(
@@ -123,7 +124,7 @@ class _profile_pageState extends State<profile_page> {
                                 children: [
                                   Text(
                                     profileModel!.data!.myData!.name!,
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                   Text(
                                     'Footballer',
@@ -180,12 +181,10 @@ class _profile_pageState extends State<profile_page> {
                                       ),
                                   itemCount: s.length);
                             } else if (state is MyPostsLoadingState) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return const PostShimmer();
                             } else {
                               return const Center(
-                                child: Text('Faild to load posts !!'),
+                                child: Text('Failed to load posts !!'),
                               );
                             }
                           });
@@ -195,145 +194,6 @@ class _profile_pageState extends State<profile_page> {
                     ),
                   ],
                 );
-          // Container(
-          //         width: double.infinity,
-          //         height: double.infinity,
-          //         color: AppColors.scaffold,
-          //         child: SingleChildScrollView(
-          //           child: Column(
-          //             children: [
-          //               Stack(
-          //                 children: [
-          //                   Container(
-          //                     height: 100,
-          //                     width: double.infinity,
-          //                     decoration: const BoxDecoration(
-          //                       gradient: LinearGradient(
-          //                         begin: Alignment.centerRight,
-          //                         end: Alignment.centerLeft,
-          //                         stops: [0.0, 100.0],
-          //                         colors: [
-          //                           ColorApp.blue,
-          //                           ColorApp.move,
-          //                         ],
-          //                       ),
-          //                     ),
-          //                     child: const Center(
-          //                       child: Padding(
-          //                         padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
-          //                         child: Row(
-          //                           mainAxisAlignment: MainAxisAlignment.center,
-          //                           children: [],
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   ),
-          //                   Padding(
-          //                     padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-          //                     child: Center(
-          //                       child: CircleAvatar(
-          //                         radius: 60,
-          //                         backgroundColor: ColorApp.black_400,
-          //                         backgroundImage: NetworkImage(profileModel!
-          //                             .data!.myData!.photo
-          //                             .toString()),
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //               Text(
-          //                 '${profileModel!.data!.myData!.name}',
-          //                 style: const TextStyle(
-          //                     fontSize: 20, color: Colors.white),
-          //               ),
-          //               Row(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 crossAxisAlignment: CrossAxisAlignment.center,
-          //                 children: [
-          //                   profileModel!.data!.myData!.youtube != null
-          //                       ? GestureDetector(
-          //                           onTap: () {
-          //                             Uri url = Uri.parse(profileModel!
-          //                                 .data!.myData!.youtube
-          //                                 .toString());
-          //                             _launchUrl(url);
-          //                           },
-          //                           child: const Image(
-          //                             height: 35,
-          //                             width: 35,
-          //                             image: AssetImage(
-          //                                 'assets/icons/ic_youtube.png'),
-          //                           ),
-          //                         )
-          //                       : const SizedBox(),
-          //                   const SizedBox(
-          //                     width: 5,
-          //                   ),
-          //                   profileModel!.data!.myData!.instagram != null
-          //                       ? GestureDetector(
-          //                           onTap: () {
-          //                             Uri url = Uri.parse(profileModel!
-          //                                 .data!.myData!.instagram
-          //                                 .toString());
-          //                             _launchUrl(url);
-          //                           },
-          //                           child: const Image(
-          //                             height: 35,
-          //                             width: 35,
-          //                             image: AssetImage(
-          //                                 'assets/icons/ic_insta.png'),
-          //                           ),
-          //                         )
-          //                       : const SizedBox(),
-          //                 ],
-          //               ),
-          //               Text(
-          //                 '${followersModel!.data!.length}  المتابِعين   ',
-          //                 style: const TextStyle(
-          //                     fontSize: 16, color: Colors.white),
-          //               ),
-          //               Component_App.Item_account(
-          //                   function: () {
-          //                     Navigator.pushNamed(context, '/Profile');
-          //                   },
-          //                   file: 'assets/icons/ic_myvideo.png',
-          //                   title: 'فيديوهاتي'),
-          //               Component_App.Item_account(
-          //                   function: () {
-          //                     Navigator.pushNamed(context, '/Update_Account');
-          //                   },
-          //                   file: 'assets/icons/ic_settings.png',
-          //                   title: 'تعديل الحساب'),
-          //               Component_App.Item_account(
-          //                   function: () {
-          //                     Navigator.pushNamed(
-          //                         context, '/termsAndConditions');
-          //                   },
-          //                   file: 'assets/icons/ic_prv.png',
-          //                   title: 'شروط الاستخدام '),
-          //               Component_App.Item_account(
-          //                   function: () {
-          //                     Navigator.pushNamed(context, '/privacy_policy');
-          //                   },
-          //                   file: 'assets/icons/ic_lock.png',
-          //                   title: 'سياسة الخصوصية '),
-          //               Component_App.Item_account(
-          //                 function: () {
-          //                   SharedPreferences.getInstance().then((value) {
-          //                     value.remove('token');
-          //                   });
-          //                   CacheHelper.Remove('tokens');
-          //                   CacheHelper.Remove('isFirstOpen');
-          //                   Navigator.popAndPushNamed(context, '/login_user');
-          //                 },
-          //                 file: 'assets/icons/ic_logout.png',
-          //                 title: 'تسجيل الخروج',
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       );
         },
       ),
     );

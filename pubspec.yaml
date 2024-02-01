@@ -60,6 +60,7 @@ dependencies:
   flutter_advanced_drawer: ^1.3.5
   equatable:
   story_view:
+  shimmer: ^3.0.0
 
 dev_dependencies: 
   flutter_lints: ^2.0.1
