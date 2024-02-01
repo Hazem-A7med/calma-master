@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nadek/data/model/stories_model.dart';
+import 'package:nadek/data/model/my_stories_model.dart';
 import 'package:story_view/story_view.dart';
 
 class StoryWidget extends StatefulWidget {

@@ -74,9 +74,8 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path_ios: "assets/images/logo.png"
   image_path_android: "assets/images/logo.png"
-  # https://github.com/fluttercommunity/flutter_launcher_icons/issues/144
-  # adaptive_icon_background: "assets/app-icon-background.png"
-  # adaptive_icon_foreground: "assets/app-icon-foreground.png"
+
+
 
 flutter: 
   assets: 

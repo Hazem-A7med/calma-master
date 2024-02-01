@@ -4,8 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/BestUser.dart';
+import 'package:nadek/data/model/all_posts_model.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
+import 'package:nadek/logic/cubit/my_posts_cubit.dart';
+import 'package:nadek/logic/states/all_posts_states.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/create_post_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/stories_list.dart';
@@ -23,6 +26,7 @@ import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/Clubs/Clubs.dart';
 
+import '../../../../logic/cubit/all_posts_cubit.dart';
 import '../../../../logic/cubit/stories_cubit.dart';
 import '../../Maps.dart';
 import '../Champions/Champions.dart';
@@ -66,7 +70,13 @@ class _MainPageState extends State<MainPage> {
     print(token);
     print(token);
 
-
+    Future.delayed(
+      Duration.zero,
+          () async {
+        BlocProvider.of<MyPostsCubit>(context, listen: false)
+            .fetchMyPosts(CacheHelper.getString('tokens')!);
+      },
+    );
     super.initState();
   }
 
@@ -146,9 +156,10 @@ class _MainPageState extends State<MainPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (builder) => ProfileOfUser(
-                                        myProfile: true,
-                                        user_id: int.parse(id!))));
+                                    builder: (builder) =>
+                                        ProfileOfUser(
+                                            myProfile: true,
+                                            user_id: int.parse(id!))));
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -199,70 +210,34 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // SizedBox(
-                          //   height: 150,
-                          //   child: RotatedBox(
-                          //     quarterTurns: 1,
-                          //     child: ListWheelScrollView(
-                          //         itemExtent: 100,
-                          //         squeeze: .7,
-                          //         physics: const FixedExtentScrollPhysics(),
-                          //         diameterRatio: 1.9,
-                          //         perspective: 0.001,
-                          //         onSelectedItemChanged: (value) {
-                          //           setState(() {
-                          //             currentScrollValue = value;
-                          //           });
-                          //         },
-                          //         controller: controller,
-                          //         children: <Widget>[
-                          //           ...nameList.map((String name) {
-                          //             return (nameList.indexOf(name) ==
-                          //                     currentScrollValue)
-                          //                 ? Container(
-                          //                     height: 100,
-                          //                     width: 100,
-                          //                     decoration: BoxDecoration(
-                          //                         color: CupertinoColors.white,
-                          //                         borderRadius:
-                          //                             BorderRadius.circular(10),
-                          //                         border: Border.all(
-                          //                             width: 1,
-                          //                             color: CupertinoColors
-                          //                                 .inactiveGray)),
-                          //                     padding: const EdgeInsets.all(10),
-                          //                     child: Text(name),
-                          //                   )
-                          //                 : Container(
-                          //                     height: 40,
-                          //                     width: 40,
-                          //                     decoration: BoxDecoration(
-                          //                         color:
-                          //                             CupertinoColors.systemGreen,
-                          //                         borderRadius:
-                          //                             BorderRadius.circular(10),
-                          //                         border: Border.all(
-                          //                             width: 1,
-                          //                             color: CupertinoColors
-                          //                                 .inactiveGray)),
-                          //                     padding: const EdgeInsets.all(10),
-                          //                     child: Text(name),
-                          //                   );
-                          //           })
-                          //         ]),
-                          //   ),
-                          // ),
                           const StoriesList(),
                           const CreatePostWidget(),
-                          ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => const PostItem(),
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                              itemCount: 10)
+                          BlocBuilder<AllPostsCubit, AllPostsState>(
+                              builder: (context, state) {
+                                if (state is AllPostsLoadedState) {
+                                  List<AllPostsResponse>s = state.allPosts;
+                                  return ListView.separated(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) =>
+                                          PostItem(name: s[index].user?.name,
+                                            image: s[index].user?.photo,
+                                            description: s[index].allPost!.first.post,),
+                                      separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      itemCount: s.length);
+                                } else if (state is AllPostsLoadingState) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: Text('Faild to load posts !!'),
+                                  );
+                                }
+                              }),
 
                           // GestureDetector(
                           //   onTap: () {
@@ -622,7 +597,7 @@ class _MainPageState extends State<MainPage> {
     List<DrawerData> drawerData = [
       DrawerData(
         'الرئيسية',
-        () {
+            () {
           //Navigator.pop(context);
           Navigator.popAndPushNamed(context, '/MainPage');
         },
@@ -630,7 +605,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'المجموعات',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const groups_page()));
         },
@@ -638,7 +613,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'انتاج فيديوهات',
-        () {
+            () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const make_video_page()));
         },
@@ -646,7 +621,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الحساب',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const profile_page()));
         },
@@ -654,7 +629,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الفيديوهات',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const home_page()));
         },
@@ -662,7 +637,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'صرح',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Champions()));
         },
@@ -670,7 +645,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الملاعب',
-        () {
+            () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const ReservationScreen()));
         },
@@ -678,7 +653,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'البحث',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const SearchScreen()));
         },
@@ -686,7 +661,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'أنواع الرياضات',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const TypeSports()));
         },
@@ -695,7 +670,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'خريطة اللاعبين',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Maps()));
         },
@@ -704,7 +679,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'بث مباشر',
-        () {
+            () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => VirtualTournmentsList()));
         },
@@ -712,7 +687,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'خريطة الملاعب',
-        () {
+            () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const PlaygroundMaps()));
         },
@@ -720,7 +695,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'البطولات',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Clubs()));
         },
@@ -728,7 +703,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'المتجر',
-        () {
+            () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const shop_page()));
         },
@@ -745,10 +720,12 @@ class _MainPageState extends State<MainPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (builder) => ProfileOfUser(
-                            myProfile: true, user_id: int.parse(id!))));
+                        builder: (builder) =>
+                            ProfileOfUser(
+                                myProfile: true, user_id: int.parse(id!))));
               },
-              child: SizedBox(width: double.infinity,
+              child: SizedBox(
+                width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -772,28 +749,30 @@ class _MainPageState extends State<MainPage> {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: drawerData[index].action,
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        drawerData[index].icon,
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Text(drawerData[index].title,
-                            style:
+                itemBuilder: (context, index) =>
+                    GestureDetector(
+                      onTap: drawerData[index].action,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            drawerData[index].icon,
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Text(drawerData[index].title,
+                                style:
                                 TextStyle(color: Colors.white.withOpacity(.4))),
-                        const Expanded(child: SizedBox())
-                      ],
+                            const Expanded(child: SizedBox())
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
                 itemCount: drawerData.length,
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.white.withOpacity(.3),
-                ),
+                separatorBuilder: (context, index) =>
+                    Divider(
+                      color: Colors.white.withOpacity(.3),
+                    ),
                 //children: [
                 // ListTile(
                 //   title: Text("المجموعات", style: TextStyle(color: Colors.white)),
@@ -837,9 +816,9 @@ class _MainPageState extends State<MainPage> {
               height: 50,
               child: Center(
                   child: Text(
-                'Calma App',
-                style: TextStyle(color: Colors.white.withOpacity(.7)),
-              )),
+                    'Calma App',
+                    style: TextStyle(color: Colors.white.withOpacity(.7)),
+                  )),
             ),
           ],
         ));

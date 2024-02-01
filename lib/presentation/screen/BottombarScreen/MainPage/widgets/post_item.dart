@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PostItem extends StatefulWidget {
-  const PostItem({Key? key}) : super(key: key);
+  const PostItem(
+      {Key? key, this.name, this.image, this.mediaType, this.mediaLink, this.description})
+      : super(key: key);
+  final String? name;
+  final String? image;
+  final String? mediaType;
+  final String? mediaLink;
+  final String? description;
 
   @override
   State<PostItem> createState() => _PostItemState();
@@ -33,9 +40,10 @@ class _PostItemState extends State<PostItem> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'نور الدين محمد',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        Text(
+                          widget.name ?? '',
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white),
                         ),
                         Row(
                           children: [
@@ -59,25 +67,32 @@ class _PostItemState extends State<PostItem> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 25,
                       backgroundImage: NetworkImage(
-                          'https://img.freepik.com/free-photo/front-view-woman-posing-futuristic-portrait_23-2151179031.jpg'),
+                          widget.image ?? ''),
                     ),
                   ],
                 ),
               ],
             ),
-            const Align(
+            Align(
               alignment: Alignment.centerRight,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                 child: Text(
-                  'سعيد جدا بمباراة لفيربول الليلة تحياتي للمدرب  الرائع',
+                  widget.description ?? '',
                   style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ),
             ),
+            (widget.mediaType == 'photo') ? Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Image.network(
+                widget.mediaLink ?? '',
+                width: double.infinity,
+                fit: BoxFit.fitWidth,),
+            ):const SizedBox(),
             Container(
               height: 1,
               width: double.infinity,
@@ -95,7 +110,10 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery.of(context).size.width * .023)),
+                              MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -108,7 +126,10 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery.of(context).size.width * .023)),
+                              MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -121,7 +142,10 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery.of(context).size.width * .023)),
+                              MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -134,7 +158,10 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                                  MediaQuery.of(context).size.width * .023)),
+                              MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .023)),
                       const SizedBox(
                         width: 7,
                       ),

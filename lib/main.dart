@@ -8,7 +8,10 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/repository/repository.dart';
 import 'package:nadek/data/webservices/WebServices.dart';
+import 'package:nadek/logic/cubit/all_posts_cubit.dart';
+import 'package:nadek/logic/cubit/all_stories_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
+import 'package:nadek/logic/cubit/my_posts_cubit.dart';
 import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/presentation/App_Route.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
@@ -21,12 +24,14 @@ void main() async {
 
   await CacheHelper.init();
 
-  initializeDateFormatting().then((_) => runApp(Phoenix(
+  initializeDateFormatting().then(
+    (_) => runApp(
+      Phoenix(
         child: MyApp(
           app_routeing: App_Routeing(),
         ),
       ),
-  ),
+    ),
   );
 }
 
@@ -43,8 +48,16 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => NadekCubit(repository(Web_Services())),
-          ),BlocProvider(
+          ),
+          BlocProvider(
             create: (context) => StoriesCubit(),
+          ),
+          BlocProvider(
+            create: (context) => AllStoriesCubit(),
+          ),BlocProvider(
+            create: (context) => MyPostsCubit(),
+          ),BlocProvider(
+            create: (context) => AllPostsCubit(),
           ),
         ],
         child: MaterialApp(

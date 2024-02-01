@@ -1,30 +1,30 @@
 import 'package:bloc/bloc.dart';
 import 'package:date_format/date_format.dart';
 
-import '../../data/model/stories_model.dart';
+import '../../data/model/my_stories_model.dart';
 import '../../data/webservices/WebServices.dart';
-import '../states/stories_states.dart'; // Replace with your actual project structure
+import '../states/my_stories_states.dart'; // Replace with your actual project structure
 
 
-class StoriesCubit extends Cubit<StoriesState> {
+class StoriesCubit extends Cubit<MyStoriesState> {
   final Web_Services web_services = Web_Services();
-  List<Story>s=[];
-  StoriesCubit() : super(StoriesInitialState());
+  List<Story>myStories=[];
+
+  StoriesCubit() : super(MyStoriesInitialState());
   void fetchMyStories(String token) async {
-    emit(StoriesLoadingState());
+    emit(MyStoriesLoadingState());
     print('stories step 0');
     try {
-      StoriesModel storiesModel = await web_services.getStoriesData(token: token);
+      StoriesModel storiesModel = await web_services.getMyStoriesData(token: token);
       print('stories step 1');
-      s=storiesModel.storyResponse!.stories!;
+      myStories=storiesModel.storyResponse!.stories!;
       print('stories step 2');
-      print(s.first.description);
+      print(myStories.first.description);
       print('stories step 3');
-      //emit(StoriesLoadedState(stories: storiesModel.storyResponse?.story ?? []));
-      emit(StoriesLoadedState(stories: s));
+      emit(MyStoriesLoadedState(stories: myStories));
       print('successsssssssssssssssssssssssssssss');
     } catch (error) {
-      emit(StoriesErrorState(error: 'Failed to load stories: ${error.toString()}'));
+      emit(MyStoriesErrorState(error: 'Failed to load stories: ${error.toString()}'));
     }
   }
 }

@@ -16,6 +16,10 @@ import 'package:nadek/sheard/constante/cache_hleper.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../data/model/my_posts_model.dart';
+import '../../../../logic/cubit/my_posts_cubit.dart';
+import '../../../../logic/states/my_posts_states.dart';
+
 class profile_page extends StatefulWidget {
   const profile_page({Key? key}) : super(key: key);
 
@@ -38,36 +42,19 @@ class _profile_pageState extends State<profile_page> {
     super.initState();
     token = CacheHelper.getString('tokens')!;
     nadekCubit.GetFollowers(token: token);
+    Future.delayed(
+      Duration.zero,
+      () async {
+        BlocProvider.of<MyPostsCubit>(context, listen: false)
+            .fetchMyPosts(CacheHelper.getString('tokens')!);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffold,
-      // appBar: AppBar(
-      //   flexibleSpace: Container(
-      //     width: double.infinity,
-      //     decoration: const BoxDecoration(
-      //       gradient: LinearGradient(
-      //         begin: Alignment.centerRight,
-      //         end: Alignment.centerLeft,
-      //         stops: [0.0, 100.0],
-      //         colors: [
-      //           ColorApp.blue,
-      //           ColorApp.move,
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.settings),
-      //     onPressed: () {
-      //       Navigator.pushNamed(context, '/Update_Account');
-      //     },
-      //   ),
-      // ),
       body: BlocConsumer<NadekCubit, NadekState>(
         listener: (context, state) {
           if (state is ChangeProfile) {
@@ -125,10 +112,8 @@ class _profile_pageState extends State<profile_page> {
                           child: Column(children: [
                             Expanded(
                               flex: 4,
-                              child: Image.asset(
-                                  'assets/images/page_1.png',
-                                  width: double.infinity,
-                                  fit: BoxFit.cover),
+                              child: Image.asset('assets/images/page_1.png',
+                                  width: double.infinity, fit: BoxFit.cover),
                             ),
                             Expanded(
                               flex: 2,
@@ -172,9 +157,40 @@ class _profile_pageState extends State<profile_page> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          return const PostItem();
+                          return BlocBuilder<MyPostsCubit, MyPostsState>(
+                              builder: (context, state) {
+                            if (state is MyPostsLoadedState) {
+                              List<MyPost> s = state.stories;
+                              print(s.length);
+                              return ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) => PostItem(
+                                        name: CacheHelper.getString('username'),
+                                        image: CacheHelper.getString('photo')
+                                            .toString()
+                                            .replaceAll('\'', ''),
+                                        mediaType: s[index].mediaType,
+                                        mediaLink: s[index].mediaPath,
+                                        description: s[index].content,
+                                      ),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                  itemCount: s.length);
+                            } else if (state is MyPostsLoadingState) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              return const Center(
+                                child: Text('Faild to load posts !!'),
+                              );
+                            }
+                          });
                         },
-                        childCount: 20,
+                        childCount: 1,
                       ),
                     ),
                   ],

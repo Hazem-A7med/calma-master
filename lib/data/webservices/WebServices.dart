@@ -43,9 +43,12 @@ import 'package:nadek/data/model/register_model.dart';
 import 'package:nadek/data/model/sports.dart';
 import 'package:nadek/presentation/screen/virtualTournments/virtual_methods.dart';
 
-import '../model/stories_model.dart';
-import '../model/stories_model.dart';
-import '../model/stories_model.dart';
+import '../model/all_posts_model.dart';
+import '../model/all_stories_model.dart';
+import '../model/my_stories_model.dart';
+import '../model/my_stories_model.dart';
+import '../model/my_stories_model.dart';
+import '../model/my_posts_model.dart';
 
 class Web_Services {
   late Dio dio;
@@ -59,7 +62,75 @@ class Web_Services {
     ));
   }
 
-  Future<StoriesModel> getStoriesData({
+  Future<AllPostsModel> getAllPosts({
+    required String token,
+  }) async {
+    dio.options.headers['Authorization'] = ' Bearer$token';
+    print('web begin');
+
+    try {
+      Response<String> response = await dio.get('community/post/all');
+      final responseData = json.decode(response.data ?? '{}');
+
+      print(responseData['Response']);
+      print(response.statusCode);
+      print(
+          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return AllPostsModel.fromJson(responseData);
+      } else {
+        throw DioError(
+          response: response,
+          error: 'Failed to load stories data',
+          requestOptions: response.requestOptions,
+        );
+      }
+    } catch (error) {
+      print(error.toString());
+      throw DioError(
+        error: 'Failed to load stories data: ${error.toString()}',
+        requestOptions: RequestOptions(path: 'YOUR_API_ENDPOINT'),
+      );
+    }
+  }
+  //////////////////////////////////////////////////////////
+
+  Future<MyPostsModel> getMyPosts({
+    required String token,
+  }) async {
+    dio.options.headers['Authorization'] = ' Bearer$token';
+    print('web begin');
+
+    try {
+      Response<String> response = await dio.get('community/post/my-posts');
+      final responseData = json.decode(response.data ?? '{}');
+
+      print(responseData['Response']);
+      print(response.statusCode);
+      print(
+          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return MyPostsModel.fromJson(responseData);
+      } else {
+        throw DioError(
+          response: response,
+          error: 'Failed to load stories data',
+          requestOptions: response.requestOptions,
+        );
+      }
+    } catch (error) {
+      print(error.toString());
+      throw DioError(
+        error: 'Failed to load stories data: ${error.toString()}',
+        requestOptions: RequestOptions(path: 'YOUR_API_ENDPOINT'),
+      );
+    }
+  }
+  Future<StoriesModel> getMyStoriesData({
     required String token,
   }) async {
     dio.options.headers['Authorization'] = ' Bearer$token';
@@ -77,6 +148,40 @@ class Web_Services {
 
       if (response.statusCode == 200) {
         return StoriesModel.fromJson(responseData);
+      } else {
+        throw DioError(
+          response: response,
+          error: 'Failed to load stories data',
+          requestOptions: response.requestOptions,
+        );
+      }
+    } catch (error) {
+      print(error.toString());
+      throw DioError(
+        error: 'Failed to load stories data: ${error.toString()}',
+        requestOptions: RequestOptions(path: 'YOUR_API_ENDPOINT'),
+      );
+    }
+  }
+
+  Future<AllStoriesModel> getAllStoriesData({
+    required String token,
+  }) async {
+    dio.options.headers['Authorization'] = ' Bearer$token';
+    print('web begin');
+
+    try {
+      Response<String> response = await dio.get('community/stories/all');
+      final responseData = json.decode(response.data ?? '{}');
+
+      print(responseData['Response']);
+      print(response.statusCode);
+      print(
+          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        return AllStoriesModel.fromJson(responseData);
       } else {
         throw DioError(
           response: response,
