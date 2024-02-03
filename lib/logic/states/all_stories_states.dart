@@ -14,12 +14,12 @@ class AllStoriesInitialState extends AllStoriesState {}
 class AllStoriesLoadingState extends AllStoriesState {}
 
 class AllStoriesLoadedState extends AllStoriesState {
-  final List<AllStoriesResponse> stories;
+  final List<AllStoriesResponse> allStories;
 
-  const AllStoriesLoadedState({required this.stories});
+  const AllStoriesLoadedState({required this.allStories});
 
   @override
-  List<Object> get props => [stories];
+  List<Object> get props => [allStories];
 }
 
 class AllStoriesErrorState extends AllStoriesState {

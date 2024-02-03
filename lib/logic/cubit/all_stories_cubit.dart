@@ -20,7 +20,10 @@ class AllStoriesCubit extends Cubit<AllStoriesState> {
       print('allStories step 2');
       print(allStories.first.user?.name);
       print('allStories step 3');
-      emit(AllStoriesLoadedState(stories: allStories));
+      print(allStories);
+      print(allStories);
+      print(allStories.first.user?.name);
+      emit(AllStoriesLoadedState(allStories: allStories));
       print('successsssssssssssssssssssssssssssss');
     } catch (error) {
       emit(AllStoriesErrorState(error: 'Failed to load stories: ${error.toString()}'));

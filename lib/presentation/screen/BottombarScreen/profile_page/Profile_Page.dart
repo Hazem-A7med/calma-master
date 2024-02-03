@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/FollowersModel.dart';
@@ -13,13 +11,12 @@ import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_
 import 'package:nadek/presentation/screen/BottombarScreen/profile_page/widgets/first_icons_row.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/profile_page/widgets/sec_icons_row.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../data/model/my_posts_model.dart';
 import '../../../../logic/cubit/my_posts_cubit.dart';
 import '../../../../logic/states/my_posts_states.dart';
-import '../MainPage/widgets/postshimmer.dart';
+import '../MainPage/widgets/post_shimmer.dart';
 
 class profile_page extends StatefulWidget {
   const profile_page({Key? key}) : super(key: key);

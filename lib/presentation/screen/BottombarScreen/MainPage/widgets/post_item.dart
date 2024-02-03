@@ -67,7 +67,7 @@ class _PostItemState extends State<PostItem> {
                     const SizedBox(
                       width: 10,
                     ),
-                    CircleAvatar(
+                   if(widget.image!=null) CircleAvatar(
                       radius: 25,
                       backgroundImage: NetworkImage(
                           widget.image ?? ''),

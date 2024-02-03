@@ -54,9 +54,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AllStoriesCubit(),
-          ),BlocProvider(
+          ),
+          BlocProvider(
             create: (context) => MyPostsCubit(),
-          ),BlocProvider(
+          ),
+          BlocProvider(
             create: (context) => AllPostsCubit(),
           ),
         ],

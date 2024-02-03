@@ -5,7 +5,10 @@ import 'package:nadek/logic/cubit/all_stories_cubit.dart';
 import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/logic/states/all_stories_states.dart';
 import 'package:nadek/logic/states/my_stories_states.dart';
-import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/all_stories_view_widget.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/my_story_view_widget.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_item.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_shimmer.dart';
 
 import '../../../../../data/model/my_stories_model.dart';
 import '../../../../../sheard/constante/cache_hleper.dart';
@@ -19,7 +22,32 @@ class StoriesList extends StatefulWidget {
 
 class _StoriesListState extends State<StoriesList> {
   List<AllStoriesResponse> allStories = [];
-  int length = 0;
+  int length = 1;
+  List<Story> myStories = [];
+
+  void updateLength() {
+    setState(() {
+      length = 1 + allStories.length;
+      print(
+          '###########################################################$length');
+    });
+  }
+
+  Future<void> fetchData() async {
+    BlocProvider.of<StoriesCubit>(context, listen: false)
+        .fetchMyStories(CacheHelper.getString('tokens')!);
+    BlocProvider.of<AllStoriesCubit>(context, listen: false)
+        .fetchAllStories(CacheHelper.getString('tokens')!);
+
+    // Set state after fetching data
+    setState(() {
+      myStories = BlocProvider.of<StoriesCubit>(context)
+          .myStories; // Update with your actual state access
+      allStories = BlocProvider.of<AllStoriesCubit>(context)
+          .allStories; // Update with your actual state access
+      length = 1 + allStories.length;
+    });
+  }
 
   @override
   void initState() {
@@ -32,6 +60,8 @@ class _StoriesListState extends State<StoriesList> {
             .fetchAllStories(CacheHelper.getString('tokens')!);
       },
     );
+
+    // fetchData();
     super.initState();
   }
 
@@ -43,132 +73,124 @@ class _StoriesListState extends State<StoriesList> {
         textDirection: TextDirection.rtl,
         child: SizedBox(
           height: 115,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) => (index == 0)
-                /////////////////////////////////////////////////////////////////////////////////
-                ? BlocBuilder<StoriesCubit, MyStoriesState>(
-                    builder: (BuildContext context, state) {
-                    if (state is MyStoriesLoadedState) {
-                      List<Story> stories = state.stories;
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    StoryWidget(listOfStories: stories),
-                              ));
-                        },
-                        child: SizedBox(
-                          width: 82,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: List.filled(
-                                            1,
-                                            BoxShadow(
-                                                color: Colors.white38
-                                                    .withOpacity(.3),
-                                                blurRadius: 3,
-                                                spreadRadius: 1)),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          style: BorderStyle.values[1],
-                                          color: const Color(0xffE11717),
-                                          width: 5,
+          child: BlocConsumer<AllStoriesCubit, AllStoriesState>(
+              listener: (context, state) {
+            if (state is AllStoriesLoadedState) {
+              setState(() {
+                allStories = state.allStories;
+                updateLength();
+              });
+              print('allStoriesState is $state');
+            }
+            print('allStoriesState is $state');
+          }, builder: (BuildContext context, allStoriesState) {
+            if (allStoriesState is AllStoriesLoadedState) {
+              return BlocConsumer<StoriesCubit, MyStoriesState>(
+                listener: (context, state) {
+                  if (state is MyStoriesLoadedState) {
+                    setState(() {
+                      myStories = state.stories;
+                      updateLength();
+                    });
+                    print('myStoriesState is $state');
+                  }
+                  print('myStoriesState is $state');
+                },
+                builder: (BuildContext context, myStoriesState) {
+                  return ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return (index == 0)
+                          ?
+                          /////////////////////////////////////////////////////////////////////////////////
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MyStoryViewWidget(
+                                          listOfStories: myStories),
+                                    ));
+                              },
+                              child: SizedBox(
+                                width: 82,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Stack(
+                                      alignment: Alignment.bottomRight,
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 40,
+                                          backgroundColor:
+                                              const Color(0xffE11717),
+                                          child: Center(
+                                            child: CircleAvatar(
+                                              radius: 35,
+                                              backgroundImage: NetworkImage(
+                                                  CacheHelper.getString('photo')
+                                                      .toString()
+                                                      .replaceAll('\'', '')),
+                                            ),
+                                          ),
                                         ),
-                                        color: Colors.white),
-                                    height: 80,
-                                    width: 80),
-                                Positioned(
-                                  bottom: -5,
-                                  right: -5,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          // pickingNewImage=true;
-                                          // pickAndStoreImage();
-                                          // if(image!.path.isEmpty)pickingNewImage=false;
-                                        },
-                                      );
-                                    },
-                                    child: IconButton(
-                                        iconSize: 30,
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.add_circle_sharp,
-                                          color: Color(0xffE11717),
-                                        )),
+                                        Positioned(
+                                          bottom: -5,
+                                          right: -5,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(
+                                                () {
+                                                  // pickingNewImage=true;
+                                                  // pickAndStoreImage();
+                                                  // if(image!.path.isEmpty)pickingNewImage=false;
+                                                },
+                                              );
+                                            },
+                                            child: IconButton(
+                                                iconSize: 30,
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.add_circle_sharp,
+                                                  color: Color(0xffE11717),
+                                                )),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  })
-                :
-                ////////////////////////////////////////////////////////////////////////////////
-                BlocBuilder<AllStoriesCubit, AllStoriesState>(
-                    builder: (BuildContext context, state) {
-                      if (state is AllStoriesLoadedState) {
-                        allStories = state.stories;
-                        setState(() {
-                          length = allStories.length;
-                        });
-                        return SizedBox(
-                          width: 82,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: List.filled(
-                                            1,
-                                            BoxShadow(
-                                                color: Colors.white38
-                                                    .withOpacity(.3),
-                                                blurRadius: 3,
-                                                spreadRadius: 1)),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: const Color(0xffE11717),
-                                          width: 5,
-                                        ),
-                                        color: Colors.white),
-                                    height: 80,
-                                    width: 80),
                               ),
-                              const Text(
-                                'Ahmad Moe',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Color(0xffE11717), fontSize: 12),
+                            )
+
+                          ////////////////////////////////////////////////////////////////////////////////
+                          : GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AllStoryViewWidget(
+                                          listOfStories:
+                                              allStories[index - 1].story!),
+                                    ));
+                              },
+                              child: StoryItem(
+                                name: allStories[index - 1].user?.name ?? '',
+                                image: allStories[index - 1].user?.photo ?? '',
                               ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Container();
-                      }
+                            );
                     },
-                  ),
-            separatorBuilder: (context, index) => const SizedBox(
-              width: 20,
-            ),
-            itemCount: 1+length,
-          ),
+                    separatorBuilder: (context, index) => const SizedBox(
+                      width: 10,
+                    ),
+                    itemCount: length,
+                  );
+                },
+              );
+            }
+            else if(allStoriesState is AllStoriesLoadingState){return StoryShimmer();}else {return Container();}
+          }),
         ),
       ),
     );

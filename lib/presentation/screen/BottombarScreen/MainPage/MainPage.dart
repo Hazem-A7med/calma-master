@@ -11,8 +11,9 @@ import 'package:nadek/logic/cubit/my_posts_cubit.dart';
 import 'package:nadek/logic/states/all_posts_states.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/create_post_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_shimmer.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/stories_list.dart';
-import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/my_story_view_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/switch_button.dart';
 import 'package:nadek/presentation/screen/PlaygroundMaps.dart';
 import 'package:nadek/presentation/screen/ProfileOfUser.dart';
@@ -90,25 +91,11 @@ class _MainPageState extends State<MainPage> {
   }
 
   GlobalKey<ScaffoldState> globalDrawer = GlobalKey();
-  List<String> nameList = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
+
 
   @override
   Widget build(BuildContext context) {
-    // ScrollController controller =
-    //     FixedExtentScrollController(initialItem: initialItem);
+
     final _advancedDrawerController = AdvancedDrawerController();
     return AdvancedDrawer(
       drawer: drawer(),
@@ -230,7 +217,7 @@ class _MainPageState extends State<MainPage> {
                                       itemCount: s.length);
                                 } else if (state is AllPostsLoadingState) {
                                   return const Center(
-                                    child: CircularProgressIndicator(),
+                                    child: PostShimmer(),
                                   );
                                 } else {
                                   return const Center(

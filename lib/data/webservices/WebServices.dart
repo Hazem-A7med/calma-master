@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nadek/data/model/AddClub.dart';
 import 'package:nadek/data/model/AddTournament.dart';
 import 'package:nadek/data/model/AddUserRoom.dart';
@@ -61,6 +62,29 @@ class Web_Services {
       receiveTimeout: const Duration(minutes: 1),
     ));
   }
+
+  Future<void> uploadMedia(XFile? mediaFile , String content,String mediaType ) async {
+    try {
+      FormData formData = FormData.fromMap({
+        'photo': await MultipartFile.fromFile(
+          mediaFile!.path,
+          filename: 'media_file',
+        ),
+        'content':content,
+        'media_type': mediaType,
+      });
+
+      Response response = await dio.post(
+        'YOUR_API_ENDPOINT',
+        data: formData,
+      );
+
+      print('API Response: ${response.data}');
+    } catch (e) {
+      print('Error uploading media: $e');
+    }
+  }
+
 
   Future<AllPostsModel> getAllPosts({
     required String token,
