@@ -90,7 +90,7 @@ class _login_userState extends State<login_user> {
         width: double.infinity,
         //color: ColorApp.black_400,
         child: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(color: AppColors.mainColor),
         ),
       )
           :

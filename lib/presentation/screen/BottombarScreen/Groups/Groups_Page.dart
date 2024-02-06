@@ -1,3 +1,4 @@
+import '../../../../core/utils/app_colors.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -20,8 +21,7 @@ class groups_page extends StatefulWidget {
   State<groups_page> createState() => _groups_pageState();
 }
 
-class _groups_pageState extends State<groups_page>{
-
+class _groups_pageState extends State<groups_page> {
   AllRooms? rooms;
   bool waiting = false;
   late String token;
@@ -33,20 +33,17 @@ class _groups_pageState extends State<groups_page>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    token =CacheHelper.getString('tokens')!;
-    id=CacheHelper.getString('Id')!;
-    username =CacheHelper.getString('username');
+    token = CacheHelper.getString('tokens')!;
+    id = CacheHelper.getString('Id')!;
+    username = CacheHelper.getString('username');
     print('iddddd $id');
 
     //getRoomRET();
     BlocProvider.of<NadekCubit>(context).getAllRooms(token);
-
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           backgroundColor: ColorApp.black_400,
@@ -62,103 +59,89 @@ class _groups_pageState extends State<groups_page>{
               Navigator.pushNamed(context, '/Maps');
             },
           ),
-          title: Text(
-              'المجموعات'
-          ),
+          title: Text('المجموعات'),
         ),
-        body:  ChangeInternet(
-          chanegedInternt: (status){
+        body: ChangeInternet(
+          chanegedInternt: (status) {
             BlocProvider.of<NadekCubit>(context).getAllRooms(token);
-
           },
           child: BlocConsumer<NadekCubit, NadekState>(
             listener: (context, state) {
               // TODO: implement listener
               if (state is ChangeItemChat) {
                 BlocProvider.of<NadekCubit>(context).getAllRooms(token);
-
               }
               if (state is LoadedAllRooms) {
                 setState(() {
                   waiting = true;
-                  rooms=state.rooms;
+                  rooms = state.rooms;
                 });
               }
             },
             builder: (context, state) {
-
               return Stack(
                 children: [
-                  waiting ?
-                  Container(
-                    color: ColorApp.black_400,
-                    height: double.infinity,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          ListView.separated(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) =>
-                                  Component_App.Item_group(
-                                      file: '${rooms!.data![index].photo}',
-                                      name: '${rooms!.data![index].name}',
-                                      function: () {
-                                        Navigator.pushNamed(
-                                            context,
-                                            '/Chats',
-                                            arguments: [
-                                              rooms!.data![index].name,//name
-                                              rooms!.data![index].id, //chat id
-                                              username,// user name
-                                              id,
-                                              rooms!.data![index].owner?.id!.toInt(), //chat id
-
-                                            ]
-                                        );
-                                      }
-                                  ),
-                              separatorBuilder: (context, index) =>
-                                  Container(
-
-                                  ),
-                              itemCount: rooms!.data!.length
+                  waiting
+                      ? Container(
+                          color: ColorApp.black_400,
+                          height: double.infinity,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) =>
+                                        Component_App.Item_group(
+                                            file:
+                                                '${rooms!.data![index].photo}',
+                                            name: '${rooms!.data![index].name}',
+                                            function: () {
+                                              Navigator.pushNamed(
+                                                  context, '/Chats',
+                                                  arguments: [
+                                                    rooms!.data![index]
+                                                        .name, //name
+                                                    rooms!.data![index]
+                                                        .id, //chat id
+                                                    username, // user name
+                                                    id,
+                                                    rooms!
+                                                        .data![index].owner?.id!
+                                                        .toInt(), //chat id
+                                                  ]);
+                                            }),
+                                    separatorBuilder: (context, index) =>
+                                        Container(),
+                                    itemCount: rooms!.data!.length),
+                                SizedBox(
+                                  height: 100,
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 100,),
-
-
-                        ],
-                      ),
-                    ),
-                  ) :
-                  Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    color: ColorApp.black_400,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
+                        )
+                      : Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          color: ColorApp.black_400,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.mainColor),
+                          ),
+                        ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Component_App.Button(
                         text: 'انشاء مجموعة',
                         function: () {
                           Navigator.pushNamed(context, '/Create_Group');
-                        }
-                    ) ,
+                        }),
                   ),
-
                 ],
               );
             },
           ),
-        )
-
-    );
+        ));
   }
-
-
-
 }
-

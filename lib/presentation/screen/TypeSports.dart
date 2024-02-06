@@ -5,7 +5,7 @@ import 'package:nadek/data/model/sports.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
-
+import '../../core/utils/app_colors.dart';
 class TypeSports extends StatefulWidget {
   const TypeSports({super.key});
 
@@ -45,7 +45,7 @@ class _TypeSportsState extends State<TypeSports> {
             }
           },
           builder:(context, state){
-            return waiting?const Center(child: CircularProgressIndicator(),):
+            return waiting?const Center(child: CircularProgressIndicator(color: AppColors.mainColor),):
             ListView.builder(
               itemCount: s.data!.length,
                 itemBuilder: (itemBuilder,index){

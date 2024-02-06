@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/utils/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nadek/data/model/CommentsModel.dart';
@@ -121,7 +122,8 @@ class _home_pageState extends State<home_page> {
                         width: double.infinity,
                         color: ColorApp.black_400,
                         child: const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                              color: AppColors.mainColor),
                         ),
                       ),
               ));
@@ -320,7 +322,8 @@ class _LayoutState extends State<Layout> with SingleTickerProviderStateMixin {
                       flex: 6,
                       child: Loadeing
                           ? const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                  color: AppColors.mainColor),
                             )
                           : ListView.builder(
                               controller: _myController,

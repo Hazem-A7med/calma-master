@@ -1,4 +1,4 @@
-
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/data/model/SettingsModel.dart';
@@ -48,7 +48,7 @@ class _terms_and_conditionsState extends State<terms_and_conditions> {
             Container(
               color: ColorApp.black_400,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: AppColors.mainColor),
               ),
             ):Container(
               color:  ColorApp.black_400,

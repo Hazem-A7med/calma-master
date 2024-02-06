@@ -6,6 +6,7 @@ import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/logic/states/all_stories_states.dart';
 import 'package:nadek/logic/states/my_stories_states.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/all_stories_view_widget.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/creat_story_screen.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/my_story_view_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_shimmer.dart';
@@ -105,12 +106,21 @@ class _StoriesListState extends State<StoriesList> {
                           /////////////////////////////////////////////////////////////////////////////////
                           GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MyStoryViewWidget(
-                                          listOfStories: myStories),
-                                    ));
+                                if (myStories.isNotEmpty) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => MyStoryViewWidget(
+                                            listOfStories: myStories),
+                                      ));
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CreateStoryScreen(),
+                                      ));
+                                }
                               },
                               child: SizedBox(
                                 width: 82,
@@ -140,13 +150,14 @@ class _StoriesListState extends State<StoriesList> {
                                           right: -5,
                                           child: GestureDetector(
                                             onTap: () {
-                                              setState(
-                                                () {
-                                                  // pickingNewImage=true;
-                                                  // pickAndStoreImage();
-                                                  // if(image!.path.isEmpty)pickingNewImage=false;
-                                                },
-                                              );
+
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                        const CreateStoryScreen(),
+                                                      ));
+
                                             },
                                             child: IconButton(
                                                 iconSize: 30,
@@ -188,8 +199,11 @@ class _StoriesListState extends State<StoriesList> {
                   );
                 },
               );
+            } else if (allStoriesState is AllStoriesLoadingState) {
+              return StoryShimmer();
+            } else {
+              return Container();
             }
-            else if(allStoriesState is AllStoriesLoadingState){return StoryShimmer();}else {return Container();}
           }),
         ),
       ),

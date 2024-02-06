@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as rtc_local_view;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as rtc_remote_view;
@@ -19,6 +18,8 @@ import 'package:nadek/sheard/constante/agora_config.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../core/utils/app_colors.dart';
 
 class LivePage extends StatefulWidget {
   const LivePage(this.channelName, this.isBroadCaster, this.isOwner,
@@ -369,7 +370,7 @@ class _LivePageState extends State<LivePage> {
 
                               if (!snapshot.hasData) {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(color: AppColors.mainColor));
                               }
 
                               final data = snapshot.requireData
@@ -525,7 +526,7 @@ class _LivePageState extends State<LivePage> {
                   }
 
                   if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: AppColors.mainColor));
                   }
                   final data = snapshot.requireData;
 

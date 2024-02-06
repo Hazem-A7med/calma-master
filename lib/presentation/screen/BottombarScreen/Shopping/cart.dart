@@ -13,6 +13,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/utils/app_colors.dart';
+
 class Cart extends StatefulWidget {
   const Cart({Key? key}) : super(key: key);
 
@@ -91,7 +93,7 @@ class _CartState extends State<Cart> {
                   width: double.infinity,
                   color: ColorApp.black_400,
                   child: Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: AppColors.mainColor),
                   ),
                 )
               : Container(

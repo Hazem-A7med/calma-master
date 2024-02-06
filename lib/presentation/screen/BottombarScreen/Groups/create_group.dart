@@ -1,4 +1,4 @@
-
+import '../../../../core/utils/app_colors.dart';
 
 import 'dart:io';
 
@@ -13,7 +13,6 @@ import 'package:nadek/sheard/component/component.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class create_group extends StatefulWidget {
   const create_group({Key? key}) : super(key: key);
 
@@ -22,31 +21,30 @@ class create_group extends StatefulWidget {
 }
 
 class _create_groupState extends State<create_group> {
-  final formKey =GlobalKey<FormState>();
-   ImagePicker? _picker;
-   File? image;
-   bool loaded=false;
-   String? path;
-   bool isLoaded=false;
-   late TextEditingController _name_controller =TextEditingController();
-   String? token;
+  final formKey = GlobalKey<FormState>();
+  ImagePicker? _picker;
+  File? image;
+  bool loaded = false;
+  String? path;
+  bool isLoaded = false;
+  late TextEditingController _name_controller = TextEditingController();
+  String? token;
 
+  void getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString("token");
+    });
+  }
 
-   void getToken() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
-     setState((){
-       token= prefs.getString("token");
-
-     });
-   }
-
-   @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getToken();
-     _picker = ImagePicker();
+    _picker = ImagePicker();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,108 +54,120 @@ class _create_groupState extends State<create_group> {
         backgroundColor: ColorApp.black_400,
         title: Text('إضافة أعضاء للمجموعة'),
       ),
-      body:BlocListener<NadekCubit, NadekState>(
-       listener: (context, state) {
-         if (state is LoadedCreateGroup) {
-           Fluttertoast.showToast(
-             msg: '${state.group.msg}',
-             toastLength: Toast.LENGTH_LONG,
-             gravity: ToastGravity.BOTTOM,
-           );
-           BlocProvider.of<NadekCubit>(context).ChangeItemListChat();
+      body: BlocListener<NadekCubit, NadekState>(
+        listener: (context, state) {
+          if (state is LoadedCreateGroup) {
+            Fluttertoast.showToast(
+              msg: '${state.group.msg}',
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+            );
+            BlocProvider.of<NadekCubit>(context).ChangeItemListChat();
 
-           Navigator.pop(context);
-         }
-      },
-       child: Stack(
-        children: [
-          isLoaded?
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: ColorApp.black_400,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ) :ColoredBox(
-            color: ColorApp.black_400,
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              child:SingleChildScrollView(
-                child: Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  key: formKey,
-                  child:  Column(
-                    children: [
-                      SizedBox(height: 30,),
-                      Container(
-                        height: 207,
-                        width: 207,
-                        child:  GestureDetector(
-                            onTap: ()async{
-                              image = await _picker?.pickImage(source: ImageSource.gallery).then((value){
-                                setState((){
-                                  path=value!.path;
-                                  loaded=true;
-                                });
-                              });
-                              // Pick an image
-
-                            },
-                            child:ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(207)),
-                              child: !loaded?Image.asset('assets/icons/ic_create_group.png',fit: BoxFit.cover,): Image.file(File(path!),fit: BoxFit.cover),
-                            )
+            Navigator.pop(context);
+          }
+        },
+        child: Stack(
+          children: [
+            isLoaded
+                ? Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: ColorApp.black_400,
+                    child: Center(
+                      child:
+                          CircularProgressIndicator(color: AppColors.mainColor),
+                    ),
+                  )
+                : ColoredBox(
+                    color: ColorApp.black_400,
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        child: Form(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                height: 207,
+                                width: 207,
+                                child: GestureDetector(
+                                    onTap: () async {
+                                      image = await _picker
+                                          ?.pickImage(
+                                              source: ImageSource.gallery)
+                                          .then((value) {
+                                        setState(() {
+                                          path = value!.path;
+                                          loaded = true;
+                                        });
+                                      });
+                                      // Pick an image
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(207)),
+                                      child: !loaded
+                                          ? Image.asset(
+                                              'assets/icons/ic_create_group.png',
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.file(File(path!),
+                                              fit: BoxFit.cover),
+                                    )),
+                              ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Component_App.InputText(
+                                  controller: _name_controller,
+                                  hint: 'اسم المجموعة',
+                                  textInputType: TextInputType.text,
+                                  function: (value) {
+                                    if (value.isEmpty || value == null) {
+                                      return "ادخل  اسم المجموعة";
+                                    } else {
+                                      return null;
+                                    }
+                                  }),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Component_App.Button(
+                                  text: 'حفظ المجموعة ',
+                                  function: () {
+                                    final isValde =
+                                        formKey.currentState!.validate();
+                                    if (path == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "اضف صورة",
+                                        toastLength: Toast.LENGTH_LONG,
+                                        gravity: ToastGravity.BOTTOM,
+                                      );
+                                    }
+                                    if (isValde && path != null) {
+                                      setState(() {
+                                        isLoaded = true;
+                                      });
+                                      BlocProvider.of<NadekCubit>(context)
+                                          .CreateGroup(token!,
+                                              _name_controller.text, path!);
+                                    }
+                                  }),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(height: 30,),
-
-                      Component_App.InputText(
-                          controller: _name_controller,
-                          hint: 'اسم المجموعة',
-                          textInputType: TextInputType.text,
-                          function: (value){
-                            if (value.isEmpty||value ==null) {
-                              return "ادخل  اسم المجموعة";
-                            }else {
-                              return null;
-                            }
-                          }
-                      ),
-                      SizedBox(height: 30,),
-
-                      Component_App.Button(
-                          text: 'حفظ المجموعة ',
-                          function: (){
-                            final isValde =formKey.currentState!.validate();
-                            if (path == null) {
-                              Fluttertoast.showToast(
-                                msg: "اضف صورة",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                              );
-                            }
-                            if(isValde && path != null){
-                              setState((){
-                                isLoaded=true;
-                              });
-                              BlocProvider.of<NadekCubit>(context).CreateGroup(token!,_name_controller.text, path!);
-                            }
-
-                          }
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
+                    ),
+                  )
+          ],
+        ),
       ),
-    ) ,
     );
   }
-
-
 }

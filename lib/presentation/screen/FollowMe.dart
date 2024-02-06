@@ -8,6 +8,8 @@ import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/utils/app_colors.dart';
+
 
 class FollowMe extends StatefulWidget {
   const FollowMe({Key? key}) : super(key: key);
@@ -55,8 +57,8 @@ class _FollowMeState extends State<FollowMe> {
             width: double.infinity,
             color: ColorApp.black_400,
             
-            child: waiting ?const Center(
-              child: CircularProgressIndicator(),
+            child: waiting ? const Center(
+              child: CircularProgressIndicator(color: AppColors.mainColor),
               
             ):Center(
               child: SingleChildScrollView(

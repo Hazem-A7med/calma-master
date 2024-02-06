@@ -1,3 +1,4 @@
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/data/model/FollowedModel.dart';
@@ -84,7 +85,8 @@ class _ProfileState extends State<ProfileUser> {
                       width: double.infinity,
                       color: ColorApp.black_400,
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                            color: AppColors.mainColor),
                       ),
                     )
                   : SingleChildScrollView(
@@ -257,7 +259,7 @@ class _VideoPlayerState extends State<ItemVideoPlayer> {
             ),
           )
         : Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: AppColors.mainColor),
           );
   }
 

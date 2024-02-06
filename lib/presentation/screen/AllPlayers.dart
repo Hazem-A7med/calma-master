@@ -7,6 +7,8 @@ import 'package:nadek/presentation/screen/ProfileOfUser.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 
+import '../../core/utils/app_colors.dart';
+
 class AllPlayers extends StatefulWidget {
   const AllPlayers({super.key});
 
@@ -70,7 +72,7 @@ class _AllPlayersState extends State<AllPlayers> {
         return Container(
           child: waiting
               ? const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: AppColors.mainColor),
                 )
               : ListView.builder(
                   itemCount: d.length,

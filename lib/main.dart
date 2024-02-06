@@ -10,11 +10,14 @@ import 'package:nadek/data/repository/repository.dart';
 import 'package:nadek/data/webservices/WebServices.dart';
 import 'package:nadek/logic/cubit/all_posts_cubit.dart';
 import 'package:nadek/logic/cubit/all_stories_cubit.dart';
+import 'package:nadek/logic/cubit/creat_post_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/my_posts_cubit.dart';
 import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/presentation/App_Route.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
+
+import 'logic/cubit/creat_story_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +63,12 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AllPostsCubit(),
+          ),
+          BlocProvider(
+            create: (context) => CreatePostCubit(),
+          ),
+          BlocProvider(
+            create: (context) => CreateStoryCubit(),
           ),
         ],
         child: MaterialApp(

@@ -1,3 +1,4 @@
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/data/model/BestUser.dart';
@@ -18,10 +19,11 @@ class _BestUsersState extends State<BestUsers> {
   bool waiting = false;
   BestUser? bestUser;
   String? token;
+
   @override
   void initState() {
     // TODO: implement initState
-    token =CacheHelper.getString('tokens');
+    token = CacheHelper.getString('tokens');
     BlocProvider.of<NadekCubit>(context).GetBestUser(token: token!);
     super.initState();
   }
@@ -38,65 +40,55 @@ class _BestUsersState extends State<BestUsers> {
       body: BlocConsumer<NadekCubit, NadekState>(
         listener: (context, state) {
           if (state is LoadedBestUser) {
-              setState(() {
-                bestUser =state.data;
-                waiting =true;
-              });
-
+            setState(() {
+              bestUser = state.data;
+              waiting = true;
+            });
           }
         },
         builder: (context, state) {
           return Stack(
             children: [
-              waiting ?
-              Container(
-                color: ColorApp.black_400,
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) =>
-                              Component_App.Item_group(
-                                  file: '${bestUser!.data![index].photo}',
-                                  name: '${bestUser!.data![index].name}',
-                                  function: () {
-                                    Navigator.pushNamed(
-                                        context,
-                                        '/ProfileOfUser',
-                                      arguments: [
-                                        bestUser!.data![index].id,
-                                      ]
-
-                                    );
-
-                                  }
-                              ),
-                          separatorBuilder: (context, index) =>
-                              Container(
-
-                              ),
-                          itemCount:bestUser!.data!.length
+              waiting
+                  ? Container(
+                      color: ColorApp.black_400,
+                      height: double.infinity,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) =>
+                                    Component_App.Item_group(
+                                        file: '${bestUser!.data![index].photo}',
+                                        name: '${bestUser!.data![index].name}',
+                                        function: () {
+                                          Navigator.pushNamed(
+                                              context, '/ProfileOfUser',
+                                              arguments: [
+                                                bestUser!.data![index].id,
+                                              ]);
+                                        }),
+                                separatorBuilder: (context, index) =>
+                                    Container(),
+                                itemCount: bestUser!.data!.length),
+                            SizedBox(
+                              height: 100,
+                            ),
+                          ],
+                        ),
                       ),
-                      SizedBox(height: 100,),
-
-
-                    ],
-                  ),
-                ),
-              ) :
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                color: ColorApp.black_400,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-
-
+                    )
+                  : Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: ColorApp.black_400,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.mainColor),
+                      ),
+                    ),
             ],
           );
         },

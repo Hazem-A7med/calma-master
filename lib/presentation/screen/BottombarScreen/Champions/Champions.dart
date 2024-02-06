@@ -1,4 +1,4 @@
-
+import '../../../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -104,7 +104,7 @@ class _ChampionsState extends State<Champions> {
                 });
               }
             },
-            builder:(context,state)=>isLoading?const Center(child: CircularProgressIndicator()): SingleChildScrollView(
+            builder:(context,state)=>isLoading?const Center(child: CircularProgressIndicator(color: AppColors.mainColor)): SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

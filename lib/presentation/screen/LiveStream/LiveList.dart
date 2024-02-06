@@ -1,3 +1,4 @@
+import '../../../core/utils/app_colors.dart';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -23,72 +24,80 @@ class _LiveListState extends State<LiveList> with WidgetsBindingObserver {
   late String photo;
   late int v;
   late String id;
-  String urlImage ='https://img.freepik.com/premium-photo/composition-various-sport-equipment-fitness-games_93675-82046.jpg';
+  String urlImage =
+      'https://img.freepik.com/premium-photo/composition-various-sport-equipment-fitness-games_93675-82046.jpg';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    id= CacheHelper.getString('Id')!;
-    name=CacheHelper.getString('username')!;
-    photo =CacheHelper.getString('photo')??urlImage;
+    id = CacheHelper.getString('Id')!;
+    name = CacheHelper.getString('username')!;
+    photo = CacheHelper.getString('photo') ?? urlImage;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorApp.back1,
       appBar: AppBar(
-        backgroundColor:ColorApp.back1 ,
+        backgroundColor: ColorApp.back1,
         toolbarHeight: 0,
         title: const Text('Live'),
       ),
       body: StraemComments(),
     );
   }
-  Widget StraemComments(){
+
+  Widget StraemComments() {
     return Container(
       height: double.infinity,
       child: StreamBuilder<QuerySnapshot>(
-        stream:_firestore.collection('StreamLive').doc("Live").collection("ChannelsId").orderBy('time').snapshots(),
+        stream: _firestore
+            .collection('StreamLive')
+            .doc("Live")
+            .collection("ChannelsId")
+            .orderBy('time')
+            .snapshots(),
         builder: (context, snapshot) {
           List<LiveListModel> list = [];
-          if(!snapshot.hasData) {
+          if (!snapshot.hasData) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: AppColors.mainColor),
             );
-
           }
 
           snapshot.data!.docs.reversed.forEach((message) {
             final channelsText = message.get('channels');
             final titleText = message.get('title');
-            final imageUrl =message.get('imageUrl');
+            final imageUrl = message.get('imageUrl');
 
-
-            final dataList =LiveListModel(
-                channels:channelsText,
-                title:titleText,
-                imageUrl:imageUrl,
-                view: "100"
-            );
+            final dataList = LiveListModel(
+                channels: channelsText,
+                title: titleText,
+                imageUrl: imageUrl,
+                view: "100");
 
             list.add(dataList);
           });
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 250,
+              crossAxisCount: 2,
+              mainAxisExtent: 250,
             ),
             padding: const EdgeInsets.all(20),
-            itemCount:list.length ,
-            itemBuilder: (c,index){
-
+            itemCount: list.length,
+            itemBuilder: (c, index) {
               return StreamBuilder<QuerySnapshot>(
-                stream:_firestore.collection('ViewInLive').doc(list[index].channels).collection(list[index].channels).snapshots() ,
-                  builder: (context, snapshot){
-                   var d =snapshot.data!.docs[0].get("view");
-                 return GestureDetector(
+                stream: _firestore
+                    .collection('ViewInLive')
+                    .doc(list[index].channels)
+                    .collection(list[index].channels)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  var d = snapshot.data!.docs[0].get("view");
+                  return GestureDetector(
                     onTap: () {
                       AddView(list[index].channels);
                       Navigator.push(
@@ -116,8 +125,7 @@ class _LiveListState extends State<LiveList> with WidgetsBindingObserver {
                                 fit: BoxFit.cover,
                                 height: double.infinity,
                                 width: double.infinity,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
+                                errorBuilder: (context, error, stackTrace) {
                                   return Image.network(
                                     urlImage,
                                     fit: BoxFit.cover,
@@ -173,35 +181,41 @@ class _LiveListState extends State<LiveList> with WidgetsBindingObserver {
                   );
                 },
               );
-
             },
           );
-
         },
       ),
     );
   }
+
   ImageProvider<Object> getCharacterAvatar(String url) {
-    final image = Image.network(url, errorBuilder: (context, object, trace) {
-      return  Image.network(urlImage);
-    },).image;
+    final image = Image.network(
+      url,
+      errorBuilder: (context, object, trace) {
+        return Image.network(urlImage);
+      },
+    ).image;
     return image;
   }
-  void AddView(String UUId){
-    var c=  FirebaseFirestore.instance.collection('ViewInLive').doc(UUId).collection(UUId);
-    var shot =c.get().then((value){
+
+  void AddView(String UUId) {
+    var c = FirebaseFirestore.instance
+        .collection('ViewInLive')
+        .doc(UUId)
+        .collection(UUId);
+    var shot = c.get().then((value) {
       value.docs.forEach((element) {
         print(element.data());
-        int i =element.data()["view"]+1;
-        FirebaseFirestore.instance.collection('ViewInLive').doc(UUId).collection(UUId).doc(element.id).update({'view':i})
+        int i = element.data()["view"] + 1;
+        FirebaseFirestore.instance
+            .collection('ViewInLive')
+            .doc(UUId)
+            .collection(UUId)
+            .doc(element.id)
+            .update({'view': i})
             .then((value) => print("User Updated"))
             .catchError((error) => print("Failed to update user: $error"));
-
-
       });
     });
-
   }
-
-
 }

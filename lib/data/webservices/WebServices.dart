@@ -63,28 +63,120 @@ class Web_Services {
     ));
   }
 
-  Future<void> uploadMedia(XFile? mediaFile , String content,String mediaType ) async {
+  Future createStory(
+      {required String token,
+      XFile? photo,
+      XFile? video,
+      String? content,
+      String? mediaType}) async {
     try {
-      FormData formData = FormData.fromMap({
-        'photo': await MultipartFile.fromFile(
-          mediaFile!.path,
-          filename: 'media_file',
-        ),
-        'content':content,
-        'media_type': mediaType,
-      });
+      print(photo?.path);
+      print(photo?.path);
+      print(video?.path);
+      print(video?.path);
+      FormData formData = FormData();
 
+      if (photo != null) {
+        XFile photoFile = XFile(photo.path);
+        formData.files.add(
+          MapEntry(
+            'photo',
+            await MultipartFile.fromFile(
+              photoFile.path,
+              filename: 'image_file',
+            ),
+          ),
+        );
+      }
+
+      if (video != null) {
+        XFile videoFile = XFile(video.path);
+        formData.files.add(
+          MapEntry(
+            'video',
+            await MultipartFile.fromFile(
+              videoFile.path,
+              filename: 'video_file',
+            ),
+          ),
+        );
+      }
+
+      formData.fields.addAll([
+        MapEntry('description', content ?? ''),
+        MapEntry('media_type', mediaType ?? 'text'),
+      ]);
+
+
+      dio.options.headers['Authorization'] = ' Bearer$token';
       Response response = await dio.post(
-        'YOUR_API_ENDPOINT',
+        'community/post/create',
         data: formData,
       );
-
       print('API Response: ${response.data}');
+
+      return response.data;
     } catch (e) {
       print('Error uploading media: $e');
     }
   }
+  Future createPost(
+      {required String token,
+      XFile? photo,
+      XFile? video,
+      String? content,
+      String? mediaType}) async {
+    try {
+      print(photo?.path);
+      print(photo?.path);
+      print(video?.path);
+      print(video?.path);
+      FormData formData = FormData();
 
+      if (photo != null) {
+        XFile photoFile = XFile(photo.path);
+        formData.files.add(
+          MapEntry(
+            'photo',
+            await MultipartFile.fromFile(
+              photoFile.path,
+              filename: 'image_file',
+            ),
+          ),
+        );
+      }
+
+      if (video != null) {
+        XFile videoFile = XFile(video.path);
+        formData.files.add(
+          MapEntry(
+            'video',
+            await MultipartFile.fromFile(
+              videoFile.path,
+              filename: 'video_file',
+            ),
+          ),
+        );
+      }
+
+      formData.fields.addAll([
+        MapEntry('content', content ?? ''),
+        MapEntry('media_type', mediaType ?? 'text'),
+      ]);
+
+
+      dio.options.headers['Authorization'] = ' Bearer$token';
+      Response response = await dio.post(
+        'community/post/create',
+        data: formData,
+      );
+      print('API Response: ${response.data}');
+
+      return response.data;
+    } catch (e) {
+      print('Error uploading media: $e');
+    }
+  }
 
   Future<AllPostsModel> getAllPosts({
     required String token,
@@ -98,8 +190,7 @@ class Web_Services {
 
       print(responseData['Response']);
       print(response.statusCode);
-      print(
-          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
       print(response.statusCode);
 
       if (response.statusCode == 200) {
@@ -119,6 +210,7 @@ class Web_Services {
       );
     }
   }
+
   //////////////////////////////////////////////////////////
 
   Future<MyPostsModel> getMyPosts({
@@ -133,8 +225,7 @@ class Web_Services {
 
       print(responseData['Response']);
       print(response.statusCode);
-      print(
-          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
       print(response.statusCode);
 
       if (response.statusCode == 200) {
@@ -154,6 +245,7 @@ class Web_Services {
       );
     }
   }
+
   Future<StoriesModel> getMyStoriesData({
     required String token,
   }) async {
@@ -166,8 +258,7 @@ class Web_Services {
 
       print(responseData['Response']);
       print(response.statusCode);
-      print(
-          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
       print(response.statusCode);
 
       if (response.statusCode == 200) {
@@ -200,8 +291,7 @@ class Web_Services {
 
       print(responseData['Response']);
       print(response.statusCode);
-      print(
-          'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
+      print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${responseData}');
       print(response.statusCode);
 
       if (response.statusCode == 200) {

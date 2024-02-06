@@ -12,6 +12,8 @@ import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/utils/app_colors.dart';
+
 class DetailsPlaygroundScreen extends StatefulWidget {
   int play_ground_id;
   String date;
@@ -79,7 +81,7 @@ class _DetailsPlaygroundScreenState extends State<DetailsPlaygroundScreen> {
           builder: (context, state) {
             return waiting
                 ? const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: AppColors.mainColor),
                   )
                 : SingleChildScrollView(
                     child: Column(

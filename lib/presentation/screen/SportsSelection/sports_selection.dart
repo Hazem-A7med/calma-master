@@ -129,7 +129,7 @@ class _sports_selectionState extends State<sports_selection> {
   Widget layout(context) {
     return isLoading
         ? const Center(
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(color: AppColors.mainColor),
     )
         : SingleChildScrollView(
       physics: const ScrollPhysics(),

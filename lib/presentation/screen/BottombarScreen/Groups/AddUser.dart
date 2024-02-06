@@ -1,3 +1,4 @@
+import '../../../../core/utils/app_colors.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ import 'package:nadek/sheard/component/component.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Add_User extends StatefulWidget {
   int chat_id;
@@ -38,95 +38,86 @@ class _Add_UserState extends State<Add_User> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    token =CacheHelper.getString('tokens');
-   // getToken();
-    BlocProvider.of<NadekCubit>(context).getAllUser(room_id: widget.chat_id,token:token!);
-
+    token = CacheHelper.getString('tokens');
+    // getToken();
+    BlocProvider.of<NadekCubit>(context)
+        .getAllUser(room_id: widget.chat_id, token: token!);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorApp.black_400,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'إضافة أعضاء للمجموعة',
-          style: TextStyle(
-              fontSize: 16
+        appBar: AppBar(
+          backgroundColor: ColorApp.black_400,
+          elevation: 0,
+          centerTitle: true,
+          title: const Text(
+            'إضافة أعضاء للمجموعة',
+            style: TextStyle(fontSize: 16),
           ),
         ),
-      ),
-      body: ChangeInternet(
-        chanegedInternt: (status){
-          BlocProvider.of<NadekCubit>(context).getAllUser(room_id: widget.chat_id,token:token!);
+        body: ChangeInternet(
+          chanegedInternt: (status) {
+            BlocProvider.of<NadekCubit>(context)
+                .getAllUser(room_id: widget.chat_id, token: token!);
+          },
+          child: BlocConsumer<NadekCubit, NadekState>(
+            listener: (context, state) {
+              if (state is LoadedAddUserRoom) {
+                BlocProvider.of<NadekCubit>(context)
+                    .getAllUser(room_id: widget.chat_id, token: token!);
 
-        },
-        child: BlocConsumer<NadekCubit, NadekState>(
-          listener: (context, state) {
-            if (state is LoadedAddUserRoom) {
-              BlocProvider.of<NadekCubit>(context).getAllUser(room_id: widget.chat_id,token:token!);
+                Fluttertoast.showToast(
+                  msg: '${state.room.msg}',
+                  toastLength: Toast.LENGTH_LONG,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
 
-              Fluttertoast.showToast(
-                msg: '${state.room.msg}',
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
+              // TODO: implement listener
+              if (state is LoadedAllUser) {
+                setState(() {
+                  allUser = state.user;
+                  waiting = true;
+                });
+              }
+            },
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  waiting
+                      ? Container(
+                          color: ColorApp.black_400,
+                          height: double.infinity,
+                          width: double.infinity,
+                          child: ListView.builder(
+                              itemCount: allUser!.data!.length,
+                              itemBuilder: (build, index) {
+                                return ListItem(
+                                  token: token,
+                                  id: allUser!.data![index].id,
+                                  chat_id: widget.chat_id,
+                                  user_name: allUser!.data![index].name,
+                                  photo: allUser!.data![index].photo,
+                                  function: () {},
+                                );
+                              }),
+                        )
+                      : Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          color: ColorApp.black_400,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.mainColor),
+                          ),
+                        )
+                ],
               );
-            }
-
-            // TODO: implement listener
-            if (state is LoadedAllUser) {
-              setState(() {
-                allUser = state.user;
-                waiting = true;
-              });
-            }
-          },
-          builder: (context, state) {
-
-
-            return Stack(
-              children: [
-                waiting ?
-                Container(
-                  color: ColorApp.black_400,
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: ListView.builder(
-                      itemCount: allUser!.data!.length,
-                      itemBuilder: (build, index) {
-                        return ListItem(
-                          token: token,
-                          id: allUser!.data![index].id,
-                          chat_id: widget.chat_id,
-                          user_name: allUser!.data![index].name,
-                          photo: allUser!.data![index].photo,
-                          function: () {
-
-                          },
-                        );
-                      }),
-                ) :
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: ColorApp.black_400,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              ],
-            );
-          },
-        ),
-      )
-    );
+            },
+          ),
+        ));
   }
-
-
 }
 
 class ListItem extends StatefulWidget {
@@ -137,15 +128,15 @@ class ListItem extends StatefulWidget {
   String? user_name;
   Function() function;
 
-
-  ListItem({Key? key,
-    required this.id,
-    required this.chat_id,
-    required this.token,
-    required this.user_name,
-    required this.photo,
-    required this.function
-  }) : super(key: key);
+  ListItem(
+      {Key? key,
+      required this.id,
+      required this.chat_id,
+      required this.token,
+      required this.user_name,
+      required this.photo,
+      required this.function})
+      : super(key: key);
 
   @override
   State<ListItem> createState() => _ListItemState();
@@ -153,64 +144,58 @@ class ListItem extends StatefulWidget {
 
 class _ListItemState extends State<ListItem> {
   String title = 'اضافة';
-  bool waiting= false;
+  bool waiting = false;
   late repository rpo = repository(Web_Services());
   late NadekCubit cubit = NadekCubit(rpo);
   AddUserRoom? addUserRoom;
 
-
   @override
   Widget build(BuildContext context) {
-    return  BlocConsumer<NadekCubit, NadekState>(
+    return BlocConsumer<NadekCubit, NadekState>(
       listener: (context, state) {
         // TODO: implement listener
         if (state is LoadedAddUserRoom) {
           setState(() {
             addUserRoom = state.room;
-            waiting =false;
+            waiting = false;
             title = 'اضافة';
-
-
           });
           print(addUserRoom!.msg);
         }
       },
       builder: (context, state) {
         return ListTile(
-            leading:waiting? Container(
-              width: 50,
-              height: 50,
-              child: Center(
-                child: Container(
-                  height: 20,
-                  width: 30,
-                  child: CircularProgressIndicator( ),
-                ),
-              ),
-            ): Component_App.Button(
-                width: 72,
-                height: 26,
-                text: title,
-                function:(){
-                  setState((){
-                    BlocProvider.of<NadekCubit>(context).addRoomUser(widget.chat_id,widget.id!, '${widget.token}');
-                    waiting =true;
-                      title='تم';
-                  });
-                }
-            ),
-            onTap: () {
-
-            },
+            leading: waiting
+                ? Container(
+                    width: 50,
+                    height: 50,
+                    child: Center(
+                      child: Container(
+                        height: 20,
+                        width: 30,
+                        child: CircularProgressIndicator(
+                            color: AppColors.mainColor),
+                      ),
+                    ),
+                  )
+                : Component_App.Button(
+                    width: 72,
+                    height: 26,
+                    text: title,
+                    function: () {
+                      setState(() {
+                        BlocProvider.of<NadekCubit>(context).addRoomUser(
+                            widget.chat_id, widget.id!, '${widget.token}');
+                        waiting = true;
+                        title = 'تم';
+                      });
+                    }),
+            onTap: () {},
             title: Component_App.Item_Alluser(
                 name: '${widget.user_name}',
                 file: '${widget.photo}',
-                function: () {}
-            )
-        );
+                function: () {}));
       },
     );
   }
-
 }
-

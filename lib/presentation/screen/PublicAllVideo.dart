@@ -12,7 +12,7 @@ import 'package:nadek/sheard/constante/string.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
-
+import '../../core/utils/app_colors.dart';
 class PublicAllVideo extends StatefulWidget {
   private_video? p;
   String? videoUrl;
@@ -193,7 +193,7 @@ class _LayoutState extends State<PublicAllVideo>
                       flex: 6,
                       child: Loadeing
                           ? const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(color: AppColors.mainColor),
                             )
                           : ListView.builder(
                               controller: _myController,

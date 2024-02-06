@@ -1,4 +1,4 @@
-
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/data/model/TournamentsMode.dart';
@@ -96,7 +96,7 @@ class _TournamentListState extends State<TournamentList> {
           }
         },
         builder: (context,state){
-          return waiting?Center(child: CircularProgressIndicator()):  Container(
+          return waiting?Center(child: CircularProgressIndicator(color: AppColors.mainColor)):  Container(
             child: ListView.builder(
               controller: controller,
               itemCount: d.length,

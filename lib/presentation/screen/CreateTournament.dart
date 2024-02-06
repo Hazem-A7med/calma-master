@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import '../../core/utils/app_colors.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -193,7 +192,7 @@ class _CreateTournamentState extends State<CreateTournament> {
         },
         builder: (context, state) => isLoadeing
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: AppColors.mainColor),
               )
             : SingleChildScrollView(
                 child: Padding(

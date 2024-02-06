@@ -1,3 +1,4 @@
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -17,6 +18,7 @@ import 'package:video_player/video_player.dart';
 class ProfileOfUser extends StatefulWidget {
   int user_id;
   final bool myProfile;
+
   ProfileOfUser({
     Key? key,
     required this.user_id,
@@ -102,7 +104,8 @@ class _ProfileOfUserState extends State<ProfileOfUser> {
                       width: double.infinity,
                       color: ColorApp.black_400,
                       child: const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                            color: AppColors.mainColor),
                       ),
                     )
                   : SingleChildScrollView(
@@ -551,7 +554,9 @@ class CircleContainer extends StatelessWidget {
     super.key,
     required this.child,
   });
+
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -634,7 +639,7 @@ class _VideoPlayerState extends State<ItemVideoPlayer> {
             ),
           )
         : const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: AppColors.mainColor),
           );
   }
 
@@ -652,6 +657,7 @@ class _VideoPlayerState extends State<ItemVideoPlayer> {
 class SocialMediaButton extends StatelessWidget {
   const SocialMediaButton(
       {super.key, required this.onTap, required this.assetImagePath});
+
   final void Function() onTap;
   final String assetImagePath;
 

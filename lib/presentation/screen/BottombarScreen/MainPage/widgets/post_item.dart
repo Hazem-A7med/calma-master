@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/Home_Page.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/video_post.dart';
 
 class PostItem extends StatefulWidget {
   const PostItem(
-      {Key? key, this.name, this.image, this.mediaType, this.mediaLink, this.description})
+      {Key? key,
+      this.name,
+      this.image,
+      this.mediaType,
+      this.mediaLink,
+      this.description})
       : super(key: key);
   final String? name;
   final String? image;
@@ -67,11 +74,11 @@ class _PostItemState extends State<PostItem> {
                     const SizedBox(
                       width: 10,
                     ),
-                   if(widget.image!=null) CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(
-                          widget.image ?? ''),
-                    ),
+                    if (widget.image != null)
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(widget.image ?? ''),
+                      ),
                   ],
                 ),
               ],
@@ -86,13 +93,19 @@ class _PostItemState extends State<PostItem> {
                 ),
               ),
             ),
-            (widget.mediaType == 'photo') ? Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Image.network(
-                widget.mediaLink ?? '',
-                width: double.infinity,
-                fit: BoxFit.fitWidth,),
-            ):const SizedBox(),
+            (widget.mediaType == 'photo')
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Image.network(
+                      widget.mediaLink ?? '',
+                      width: double.infinity,height: 300,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  )
+                : (widget.mediaType == 'video')
+                    ? VideoPost(videoUrl: Uri.parse(widget.mediaLink??''),
+                        )
+                    : const SizedBox(),
             Container(
               height: 1,
               width: double.infinity,
@@ -110,10 +123,7 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * .023)),
+                                  MediaQuery.of(context).size.width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -126,10 +136,7 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * .023)),
+                                  MediaQuery.of(context).size.width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -142,10 +149,7 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * .023)),
+                                  MediaQuery.of(context).size.width * .023)),
                       const SizedBox(
                         width: 7,
                       ),
@@ -158,10 +162,7 @@ class _PostItemState extends State<PostItem> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(.3),
                               fontSize:
-                              MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width * .023)),
+                                  MediaQuery.of(context).size.width * .023)),
                       const SizedBox(
                         width: 7,
                       ),

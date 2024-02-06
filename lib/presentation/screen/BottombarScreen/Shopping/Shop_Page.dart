@@ -1,4 +1,4 @@
-
+import '../../../../core/utils/app_colors.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -83,7 +83,7 @@ class _shop_pageState extends State<shop_page> {
                width: double.infinity,
                color: ColorApp.black_400,
                child: Center(
-                 child: CircularProgressIndicator(),
+                 child: CircularProgressIndicator(color: AppColors.mainColor),
                ),
              )
              :shopoing(

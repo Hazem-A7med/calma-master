@@ -1,53 +1,50 @@
-import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/core/utils/app_colors.dart';
-import 'package:nadek/logic/cubit/creat_post_cubit.dart';
-import 'package:nadek/logic/states/create_post_states.dart';
+import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
-import 'package:video_player/video_player.dart';
 
-import '../../../../logic/cubit/my_posts_cubit.dart';
-import '../../../../sheard/constante/cache_hleper.dart';
+import '../../../../../logic/cubit/creat_story_cubit.dart';
+import '../../../../../logic/states/create_story_states.dart';
+import '../../../../../sheard/constante/cache_hleper.dart';
 
-class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({Key? key}) : super(key: key);
+
+class CreateStoryScreen extends StatefulWidget {
+  const CreateStoryScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreatePostScreen> createState() => _CreatePostScreenState();
+  State<CreateStoryScreen> createState() => _CreateStoryScreenState();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
+class _CreateStoryScreenState extends State<CreateStoryScreen> {
   TextEditingController contentController =TextEditingController();
 
   @override
   void initState() {
-
+    
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreatePostCubit, CreatePostState>(
+    return BlocBuilder<CreateStoryCubit, CreateStoryState>(
       builder: (context, state) =>
           Scaffold(
             appBar: AppBar(
               title: const Text(
-                'Create Post',
+                'Create Story',
                 style: TextStyle(fontSize: 18),
               ),
               backgroundColor: Colors.transparent,
               actions: <Widget>[
                 MaterialButton(
                   onPressed: () {
-                    BlocProvider.of<CreatePostCubit>(context, listen: false)
-                        .createPost(CacheHelper.getString('tokens')!, contentController.text);
-                    BlocProvider.of<MyPostsCubit>(context,listen: false).fetchMyPosts(CacheHelper.getString('tokens')!);
+                    BlocProvider.of<CreateStoryCubit>(context, listen: false)
+                        .createStory(CacheHelper.getString('tokens')!, contentController.text);
+                    BlocProvider.of<StoriesCubit>(context,listen: false).fetchMyStories(CacheHelper.getString('tokens')!);
                     Navigator.pop(context);
                   },
                   child: const Text(
-                    'Post',
+                    'Create Story',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 )
@@ -59,33 +56,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 padding: const EdgeInsets.all(15.0),
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            CircleAvatar(
-                                radius: 23,
-                                backgroundImage: NetworkImage(
-                                    CacheHelper.getString('photo')
-                                        .toString()
-                                        .replaceAll('\'', ''))),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              CacheHelper.getString('username') ?? '',
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     TextField(
                       cursorColor: ColorApp.darkRead,
                       style: TextStyle(
@@ -94,7 +64,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       maxLines: null,
                       decoration: InputDecoration(
                           hintText:
-                          'ما الذي يدور في ذهنك,${CacheHelper.getString(
+                          'اكتب في قصتك ,${CacheHelper.getString(
                               'username')} ؟',
                           hintTextDirection: TextDirection.rtl,
                           hintStyle: TextStyle(
@@ -114,7 +84,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<CreatePostCubit>(context,
+                              BlocProvider.of<CreateStoryCubit>(context,
                                   listen: false).pickVideo();
                             },
                             child: Container(
@@ -141,7 +111,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                            BlocProvider.of<CreatePostCubit>(context,
+                            BlocProvider.of<CreateStoryCubit>(context,
                                 listen: false).getImage();
                           },
                             child: Container(

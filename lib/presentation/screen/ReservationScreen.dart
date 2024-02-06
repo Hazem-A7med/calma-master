@@ -1,4 +1,4 @@
-
+import '../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
@@ -82,7 +82,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
             }
           },
           builder: (context,state) {
-            return  waiting?Center(child: CircularProgressIndicator()):
+            return  waiting?Center(child: CircularProgressIndicator(color: AppColors.mainColor)):
             ListView.builder(
               itemCount: d.length,
                 itemBuilder: (itemBuilder,index){

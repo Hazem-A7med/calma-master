@@ -14,6 +14,8 @@ import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../core/utils/app_colors.dart';
+
 class Upload_Video extends StatefulWidget {
   const Upload_Video({Key? key}) : super(key: key);
 
@@ -270,7 +272,7 @@ class _Upload_VideoState extends State<Upload_Video> {
         message: 'انتظر من فضلك...',
         borderRadius: 10.0,
         backgroundColor: Colors.white,
-        progressWidget: CircularProgressIndicator(),
+        progressWidget: CircularProgressIndicator(color: AppColors.mainColor),
         elevation: 10.0,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
@@ -299,7 +301,7 @@ class _Upload_VideoState extends State<Upload_Video> {
             progress: time.toDouble(),
             message: "جاري رفع الفيديو...",
             progressWidget: Container(
-                padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+                padding: EdgeInsets.all(8.0), child: CircularProgressIndicator(color: AppColors.mainColor)),
             maxProgress: 100.0,
             progressTextStyle: TextStyle(
                 color: Colors.black, fontSize: 13.0),

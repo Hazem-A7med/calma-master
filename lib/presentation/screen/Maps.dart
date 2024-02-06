@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
+import '../../core/utils/app_colors.dart';
 import 'package:custom_marker/marker_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -222,7 +222,7 @@ class _MapsState extends State<Maps> {
         builder: (context, state) {
           return isLoading
               ? const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: AppColors.mainColor),
                 )
               : GoogleMap(
                   initialCameraPosition: _kGooglePlex,

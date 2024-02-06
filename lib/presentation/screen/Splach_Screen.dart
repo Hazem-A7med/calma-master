@@ -60,7 +60,7 @@ class _splach_screenState extends State<splach_screen> {
       duration: 5000,
       screenRouteFunction: () async {
         if (token == null) {
-          return await isFirstOpen() ? '/login_user' : '/View_pager';
+          return '/login_user' ;
         } else {
           return '/MainPage';
          // return '/Home_screen';

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/SettingsModel.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
@@ -50,7 +51,7 @@ class _privacy_policyState extends State<privacy_policy> {
             Container(
               color: ColorApp.black_400,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: AppColors.mainColor),
               ),
             ):Container(
               color:  ColorApp.black_400,

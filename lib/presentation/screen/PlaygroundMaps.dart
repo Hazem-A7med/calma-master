@@ -1,3 +1,4 @@
+import '../../core/utils/app_colors.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -179,6 +180,7 @@ class _PlaygroundMapsState extends State<PlaygroundMaps> {
     target: LatLng(latit ?? 31.24855744664037, long ?? 36.6919811752108),
     zoom: 5,
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,7 +230,7 @@ class _PlaygroundMapsState extends State<PlaygroundMaps> {
         builder: (context, state) {
           return isLoading
               ? const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color: AppColors.mainColor),
                 )
               : Stack(
                   children: [

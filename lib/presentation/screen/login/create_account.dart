@@ -1,5 +1,6 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nadek/presentation/screen/login/widgets/gender_widget.dart';
 import 'package:nadek/presentation/screen/login/widgets/or_widget.dart';
 import 'package:nadek/presentation/screen/login/widgets/register_check_row.dart';
@@ -31,7 +32,11 @@ class _CreateAccountState extends State<CreateAccount> {
   bool isMale = true;
   final String _sex = 'male';
   String? _date;
-
+@override
+  void initState() {
+  _controllerPhone.text='+962';
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,8 +121,16 @@ class _CreateAccountState extends State<CreateAccount> {
                             isDense: true,
                             fillColor: ColorApp.textField,
                             filled: true,
-                            suffixIcon: const SizedBox(width: 70,
-                              child: CountryCodePicker(showFlag: true,enabled: true,
+                            suffixIcon:  SizedBox(
+                              width: 70,
+                              child: CountryCodePicker(
+                                showFlag: true,
+                                enabled: true,
+                                initialSelection: '+962',onChanged: (value) {
+                                  setState(() {
+                                    _controllerPhone.text=value.toString();
+                                  });
+                                },
                                 padding: EdgeInsets.zero,
                                 showDropDownButton: false,
                                 hideMainText: true,
@@ -222,16 +235,21 @@ class _CreateAccountState extends State<CreateAccount> {
                     Component_App.gradientButton(
                       text: 'إنشاء حساب ',
                       function: () {
-                        final isValid = formKey.currentState!.validate();
-                        if (isValid) {
-                          Navigator.pushNamed(context, '/Sports_Selection',
-                              arguments: [
-                                _controllerName.text,
-                                _date,
-                                _sex,
-                                _controllerPhone.text,
-                                _controllerPassword.text
-                              ]);
+                        if (isChecked) {
+                          final isValid = formKey.currentState!.validate();
+                          if (isValid) {
+                            Navigator.pushNamed(context, '/Sports_Selection',
+                                arguments: [
+                                  _controllerName.text,
+                                  _date,
+                                  _sex,
+                                  _controllerPhone.text,
+                                  _controllerPassword.text
+                                ]);
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'يجب الموافقة علي شروط وسياسة الخصوصية');
                         }
                       },
                     ),

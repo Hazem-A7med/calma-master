@@ -79,7 +79,7 @@ class _profile_pageState extends State<profile_page> {
                   width: double.infinity,
                   color: AppColors.scaffold,
                   child: const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: AppColors.mainColor),
                   ),
                 )
               : CustomScrollView(

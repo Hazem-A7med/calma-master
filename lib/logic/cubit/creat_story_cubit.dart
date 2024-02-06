@@ -5,9 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nadek/logic/states/create_post_states.dart';
 
 import '../../data/webservices/WebServices.dart';
+import '../states/create_story_states.dart';
 
-class CreatePostCubit extends Cubit<CreatePostState> {
-  CreatePostCubit() : super(CreatePostInitialState());
+class CreateStoryCubit extends Cubit<CreateStoryState> {
+  CreateStoryCubit() : super(CreateStoryInitialState());
   final Web_Services web_services = Web_Services();
   XFile? photo;
 
@@ -38,32 +39,32 @@ class CreatePostCubit extends Cubit<CreatePostState> {
     }
   }
 
-  void createPost(String token, String content) async {
-    emit(CreatePostLoadingState());
-    print('UploadPost step 0');
+  void createStory(String token, String content) async {
+    emit(CreateStoryLoadingState());
+    print('UploadStory step 0');
     if (content.isEmpty && (photo == null || photo!.path.isEmpty)&&(video == null || video!.path.isEmpty)) {
       Fluttertoast.showToast(msg: 'content can\'t be empty');
     } else {
       try {
         if (photo == null && video == null) mediaType = 'text';
-        Response response = await web_services.createPost(
+        Response response = await web_services.createStory(
             token: token, content: content, photo: photo ,video: video,mediaType: mediaType);
-        print('UploadPost step 1');
+        print('UploadStory step 1');
         print(response.statusCode);
-        print('UploadPost step 2');
+        print('UploadStory step 2');
         if (response.statusCode == 200) {
           Fluttertoast.showToast(msg: response.body);
-          emit(CreatePostSuccessState());
+          emit(CreateStorySuccessState());
           Fluttertoast.showToast(msg: 'created');
           print('successsssssssssssssssssssssssssssss');
         } else {
           Fluttertoast.showToast(msg: response.body);
-          emit(CreatePostErrorState());
+          emit(CreateStoryErrorState());
           print('faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaile');
         }
       } catch (error) {
         print('errrrrrrrrrrrrrrrror create post ${error.toString()}');
-        emit(CreatePostErrorState());
+        emit(CreateStoryErrorState());
       }
     }
   }
