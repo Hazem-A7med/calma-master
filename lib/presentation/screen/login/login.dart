@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/login_model.dart';
+import 'package:nadek/logic/cubit/google_signIn_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/presentation/screen/login/widgets/gradient_text.dart';
@@ -167,7 +169,7 @@ class _login_userState extends State<login_user> {
                     height: 50,
                   ),
                   const OrWidget(),
-                   SocialSignButton(image: 'Google', txt: 'الدخول باستخدام جوجل', onTab: () {  },),
+                   SocialSignButton(image: 'Google', txt: 'الدخول باستخدام جوجل', onTab: () { context.read<GoogleLogInCubit>().signInWithGoogle(context); },),
                    SocialSignButton(image: 'Facebook', txt: 'الدخول باستحدام فيس بوك', onTab: () {  },),
                   const SizedBox(height: 5,),
                   Component_App.gradientButton(

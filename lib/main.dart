@@ -11,6 +11,7 @@ import 'package:nadek/data/webservices/WebServices.dart';
 import 'package:nadek/logic/cubit/all_posts_cubit.dart';
 import 'package:nadek/logic/cubit/all_stories_cubit.dart';
 import 'package:nadek/logic/cubit/creat_post_cubit.dart';
+import 'package:nadek/logic/cubit/google_signIn_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/my_posts_cubit.dart';
 import 'package:nadek/logic/cubit/stories_cubit.dart';
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => CreateStoryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => GoogleLogInCubit(),
           ),
         ],
         child: MaterialApp(
