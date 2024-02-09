@@ -17,7 +17,7 @@ class _VideoPostState extends State<VideoPost> {
     _videoPlayerController = VideoPlayerController.networkUrl(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      aspectRatio: 16 / 9, // You can adjust this based on your video aspect ratio
+      aspectRatio: 16 / 9, 
       autoInitialize: true,
       looping: false,
       allowedScreenSleep: false,

@@ -1,12 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/logic/cubit/stories_cubit.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/video_player.dart';
 import 'package:nadek/sheard/style/ColorApp.dart';
 
-import '../../../../../logic/cubit/creat_story_cubit.dart';
-import '../../../../../logic/states/create_story_states.dart';
-import '../../../../../sheard/constante/cache_hleper.dart';
+import '../../../../logic/cubit/creat_story_cubit.dart';
+import '../../../../logic/states/create_story_states.dart';
+import '../../../../sheard/constante/cache_hleper.dart';
 
 
 class CreateStoryScreen extends StatefulWidget {
@@ -18,7 +21,8 @@ class CreateStoryScreen extends StatefulWidget {
 
 class _CreateStoryScreenState extends State<CreateStoryScreen> {
   TextEditingController contentController =TextEditingController();
-
+XFile? video;
+XFile? photo;
   @override
   void initState() {
     
@@ -79,13 +83,21 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                       height: 50,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              BlocProvider.of<CreateStoryCubit>(context,
-                                  listen: false).pickVideo();
+                            onTap: () async {
+                              await BlocProvider.of<CreateStoryCubit>(context,
+                                  listen: false)
+                                  .pickVideo();
+                              setState(() {
+                                video = BlocProvider.of<CreateStoryCubit>(context,
+                                    listen: false)
+                                    .video;
+                                if (video != null) photo = null;
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
@@ -99,21 +111,30 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                                   Text('فيديو',
                                       style: TextStyle(
                                           color: Colors.white.withOpacity(.7),
-                                          fontSize: 22)),
+                                          fontSize: 16)),
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Image.asset(
-                                      'assets/icons/video.png', height: 30),
+                                  Image.asset('assets/icons/video.png', height: 20),
                                 ],
                               ),
                             ),
                           ),
+                          const SizedBox(
+                            width: 30,
+                          ),
                           GestureDetector(
-                            onTap: () {
-                            BlocProvider.of<CreateStoryCubit>(context,
-                                listen: false).getImage();
-                          },
+                            onTap: () async {
+                              await BlocProvider.of<CreateStoryCubit>(context,
+                                  listen: false)
+                                  .getImage();
+                              setState(() {
+                                photo = BlocProvider.of<CreateStoryCubit>(context,
+                                    listen: false)
+                                    .photo;
+                                if (photo != null) video = null;
+                              });
+                            },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
@@ -126,12 +147,11 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                                   Text('صورة',
                                       style: TextStyle(
                                           color: Colors.white.withOpacity(.7),
-                                          fontSize: 22)),
+                                          fontSize: 16)),
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Image.asset(
-                                      'assets/icons/image.png', height: 30),
+                                  Image.asset('assets/icons/image.png', height: 20),
                                 ],
                               ),
                             ),
@@ -139,6 +159,12 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 60,),
+                    (photo != null)
+                        ? Image.file(File(photo!.path))
+                        : (video != null)
+                        ? VideoPlayerWidget(videoFile: File(video!.path))
+                        : const SizedBox(),
                   ],
                 ),
               ),

@@ -6,7 +6,7 @@ import 'package:nadek/logic/cubit/stories_cubit.dart';
 import 'package:nadek/logic/states/all_stories_states.dart';
 import 'package:nadek/logic/states/my_stories_states.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/all_stories_view_widget.dart';
-import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/creat_story_screen.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/creat_story_screen.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/my_story_view_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_item.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/story_shimmer.dart';
@@ -148,25 +148,20 @@ class _StoriesListState extends State<StoriesList> {
                                         Positioned(
                                           bottom: -5,
                                           right: -5,
-                                          child: GestureDetector(
-                                            onTap: () {
-
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                        const CreateStoryScreen(),
-                                                      ));
-
-                                            },
-                                            child: IconButton(
-                                                iconSize: 30,
-                                                onPressed: () {},
-                                                icon: const Icon(
-                                                  Icons.add_circle_sharp,
-                                                  color: Color(0xffE11717),
-                                                )),
-                                          ),
+                                          child: IconButton(
+                                              iconSize: 30,
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                      const CreateStoryScreen(),
+                                                    ));
+                                              },
+                                              icon: const Icon(
+                                                Icons.add_circle_sharp,
+                                                color: Color(0xffE11717),
+                                              )),
                                         ),
                                       ],
                                     ),

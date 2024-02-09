@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "207016091283-l9imo9prerac3igsi65fjhj42km33tso.apps.googleusercontent.com",
+          "client_id": "207016091283-og3pcne10ak6c3utoatoacakcfl4os6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nadek.nadek.nadek",
+            "certificate_hash": "8ffb71ca750396a03486d836eca5bc27f397274a"
+          }
+        },
+        {
+          "client_id": "207016091283-d0s8ukpsbun7f5q073rjlflubfs86vum.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "207016091283-l9imo9prerac3igsi65fjhj42km33tso.apps.googleusercontent.com",
+              "client_id": "207016091283-d0s8ukpsbun7f5q073rjlflubfs86vum.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "207016091283-pt3phvheflgbf98gom85m01het9caled.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Nadek"
+              }
             }
           ]
         }

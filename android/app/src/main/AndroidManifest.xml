@@ -24,7 +24,7 @@
         </intent>
     </queries>
     <application
-        android:label="nadek"
+        android:label="Calma"
         android:name="${applicationName}"
        android:allowBackup="false"
         android:usesCleartextTraffic="true"

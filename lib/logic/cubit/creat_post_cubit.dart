@@ -20,6 +20,7 @@ class CreatePostCubit extends Cubit<CreatePostState> {
       video = null;
       photo = XFile(image.path);
       mediaType = 'photo';
+      print('********************************************************************************${photo?.path}');
       return XFile(image.path);
     }
     return null;
@@ -44,6 +45,7 @@ class CreatePostCubit extends Cubit<CreatePostState> {
     if (content.isEmpty && (photo == null || photo!.path.isEmpty)&&(video == null || video!.path.isEmpty)) {
       Fluttertoast.showToast(msg: 'content can\'t be empty');
     } else {
+      Fluttertoast.showToast(msg: 'creating post...');
       try {
         if (photo == null && video == null) mediaType = 'text';
         Response response = await web_services.createPost(
