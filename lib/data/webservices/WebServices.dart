@@ -43,7 +43,7 @@ import 'package:nadek/data/model/public_video.dart';
 import 'package:nadek/data/model/register_model.dart';
 import 'package:nadek/data/model/sports.dart';
 import 'package:nadek/presentation/screen/virtualTournments/virtual_methods.dart';
-
+import 'package:http/http.dart' as http;
 import '../model/all_posts_model.dart';
 import '../model/all_stories_model.dart';
 import '../model/my_stories_model.dart';
@@ -61,6 +61,33 @@ class Web_Services {
       connectTimeout: const Duration(minutes: 1),
       receiveTimeout: const Duration(minutes: 1),
     ));
+  }
+
+  Future likePost({
+    required String token,
+    required String type,
+    required String postId,
+  }) async {
+    try {
+      print(postId);
+
+      dio.options.headers['Authorization'] = ' Bearer$token';
+      print(type);
+      Response response = await dio.post(
+        'community/post/$type',
+        data: {
+          'post_id': postId,
+        },
+      );
+      print('like Response: ${response.data}');
+
+      print('like Response: ${response.data}');
+
+      return response;
+    } catch (e) {
+      print('Error like post: $e');
+      rethrow;
+    }
   }
 
   Future createStory(
@@ -107,19 +134,22 @@ class Web_Services {
         MapEntry('media_type', mediaType ?? 'text'),
       ]);
 
-
       dio.options.headers['Authorization'] = ' Bearer$token';
       Response response = await dio.post(
-        'community/post/create',
+        'community/story/create',
         data: formData,
       );
       print('API Response: ${response.data}');
 
-      return response.data;
+      print('API Response: ${response.data}');
+
+      return response;
     } catch (e) {
       print('Error uploading media: $e');
+      throw e; // Rethrow the exception to propagate it further if needed
     }
   }
+
   Future createPost(
       {required String token,
       XFile? photo,
@@ -164,7 +194,6 @@ class Web_Services {
         MapEntry('media_type', mediaType ?? 'text'),
       ]);
 
-
       dio.options.headers['Authorization'] = ' Bearer$token';
       Response response = await dio.post(
         'community/post/create',
@@ -172,9 +201,10 @@ class Web_Services {
       );
       print('API Response: ${response.data}');
 
-      return response.data;
+      return response;
     } catch (e) {
       print('Error uploading media: $e');
+      throw e; // Rethrow the exception to propagate it further if needed
     }
   }
 

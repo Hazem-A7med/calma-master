@@ -10,10 +10,10 @@ class PostShimmer extends StatelessWidget {
     return Shimmer.fromColors(
         baseColor: Colors.black12,
         highlightColor: Colors.white,
-        child: const Column(
+        child: Column(
           children: [
-            PostItem(),
-            PostItem(),
+            PostItem(liked: false,),
+            PostItem(liked: false,),
           ],
         ));
   }

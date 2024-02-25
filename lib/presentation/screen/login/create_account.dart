@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nadek/presentation/screen/login/widgets/gender_widget.dart';
+import 'package:nadek/presentation/screen/login/widgets/gradient_text.dart';
 import 'package:nadek/presentation/screen/login/widgets/or_widget.dart';
 import 'package:nadek/presentation/screen/login/widgets/register_check_row.dart';
 import 'package:nadek/presentation/screen/login/widgets/social_sign_button.dart';
@@ -202,9 +203,35 @@ class _CreateAccountState extends State<CreateAccount> {
                     const SizedBox(
                       height: 10,
                     ),
-                    RegisterCheckRow(
-                      isChecked: isChecked,
+                Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(),
+                    Row(
+                      children: [
+                        const GradientText(
+                          'أوافق على شروط وسياسة الخصوصية',
+                          style: TextStyle(fontSize: 11),
+                          gradient: LinearGradient(colors: [
+                            Color(0xffE11717),
+                            Color(0xffDA552B),
+                          ]),
+                        ),
+                        const SizedBox(width: 7,),
+                        GestureDetector(onTap: () {
+                          setState(() {
+                            isChecked=!isChecked;
+                          });
+                        },
+                          child: SizedBox(width: 15,
+                              child: (isChecked)?Image.asset('assets/icons/checked.png',width: 12,):Image.asset('assets/icons/unchecked.png',width: 12,)
+                          ),
+                        )
+                      ],
                     ),
+                  ],
+                ),
                     GenderWidget(
                       isMale: isMale,
                       feMalePress: () {

@@ -24,25 +24,24 @@ class _FirstIconsRowState extends State<FirstIconsRow> {
           mimeType: 'image/png',
         ),
       ],
-      subject:
-      'الابليكيشن الاول في الوطن العربي الخاص بالرياضه',
-      text:
-      'store link',
+      subject: 'الابليكيشن الاول في الوطن العربي الخاص بالرياضه',
+      text: 'store link',
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 70,vertical: 20),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-        GestureDetector(onTap: () => shareLink(),
-          child: Image.asset('assets/icons/Group 174.png',
-              width: 35),
-        ),Image.asset('assets/icons/Group 171.png',
-            width: 35),Image.asset('assets/icons/Group 170.png',
-            width: 35),Image.asset('assets/icons/Group 168.png',
-            width: 35),
+      padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        GestureDetector(
+          onTap: () => shareLink(),
+          child: Image.asset('assets/icons/Group 174.png', width: 35),
+        ),
+       // Image.asset('assets/icons/Group 171.png', width: 35),
+        Image.asset('assets/icons/Group 170.png', width: 35),
+        Image.asset('assets/icons/Group 168.png', width: 35),
       ]),
     );
   }

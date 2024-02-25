@@ -1,27 +1,35 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:nadek/presentation/screen/BottombarScreen/Home_Page.dart';
+import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/image_view.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/video_post.dart';
 
+import '../../../../../core/utils/app_colors.dart';
+import '../../../../../sheard/style/ColorApp.dart';
+
 class PostItem extends StatefulWidget {
-  const PostItem(
+   PostItem(
       {Key? key,
       this.name,
       this.image,
       this.mediaType,
       this.mediaLink,
-      this.description})
+      this.description, required this.liked, this.likeCount, this.onLike})
       : super(key: key);
   final String? name;
   final String? image;
+  final String? likeCount;
   final String? mediaType;
   final String? mediaLink;
   final String? description;
+  final Function()? onLike;
+   bool liked;
 
   @override
   State<PostItem> createState() => _PostItemState();
 }
 
 class _PostItemState extends State<PostItem> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -86,22 +94,25 @@ class _PostItemState extends State<PostItem> {
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                 child: Text(
                   widget.description ?? '',
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ),
             ),
             (widget.mediaType == 'photo')
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Image.network(
-                      widget.mediaLink ?? '',
-                      width: double.infinity,height: 300,
-                      fit: BoxFit.fitWidth,
+                ? GestureDetector(onTap: () =>    Navigator.push(context,
+                MaterialPageRoute(builder: (c) =>  ImageView(image: widget.mediaLink??''))),
+                  child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Image.network(
+                        widget.mediaLink ?? '',
+                        width: double.infinity,height: 300,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
-                  )
+                )
                 : (widget.mediaType == 'video')
                     ? VideoPost(videoUrl: Uri.parse(widget.mediaLink??''),
                         )
@@ -115,59 +126,69 @@ class _PostItemState extends State<PostItem> {
               padding: const EdgeInsets.only(
                   bottom: 8.0, left: 10, right: 10, top: 13),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      Text('مشاركة',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .023)),
-                      const SizedBox(
-                        width: 7,
+                  // Row(
+                  //   children: [
+                  //     Text('مشاركة',
+                  //         style: TextStyle(
+                  //             color: Colors.white.withOpacity(.3),
+                  //             fontSize:
+                  //                 MediaQuery.of(context).size.width * .023)),
+                  //     const SizedBox(
+                  //       width: 7,
+                  //     ),
+                  //     Image.asset('assets/icons/share.png', height: 12),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Text('تقييم',
+                  //         style: TextStyle(
+                  //             color: Colors.white.withOpacity(.3),
+                  //             fontSize:
+                  //                 MediaQuery.of(context).size.width * .023)),
+                  //     const SizedBox(
+                  //       width: 7,
+                  //     ),
+                  //     Image.asset('assets/icons/rate.png', height: 12),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     Text('التعليقات',
+                  //         style: TextStyle(
+                  //             color: Colors.white.withOpacity(.3),
+                  //             fontSize:
+                  //                 MediaQuery.of(context).size.width * .023)),
+                  //     const SizedBox(
+                  //       width: 7,
+                  //     ),
+                  //     Image.asset('assets/icons/comment.png', height: 12),
+                  //   ],
+                  // ),
+                  GestureDetector(onTap: widget.onLike,
+                    child: SizedBox(
+                      child: Row(
+                        children: [
+                          Text((widget.liked)?'you & ${widget.likeCount}':widget.likeCount??'',
+                              style: TextStyle(
+                                  color: (widget.liked)?Colors.redAccent:Colors.white.withOpacity(.3),
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * .023,),),
+                          const SizedBox(width: 7,),
+                          Text('أعجبني',
+                              style: TextStyle(
+                                  color: (widget.liked)?Colors.redAccent:Colors.white.withOpacity(.3),
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * .023,),),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Image.asset('assets/icons/like.png', height: 12,color: (widget.liked)?Colors.redAccent:Colors.white,),
+                        ],
                       ),
-                      Image.asset('assets/icons/share.png', height: 12),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('تقييم',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .023)),
-                      const SizedBox(
-                        width: 7,
-                      ),
-                      Image.asset('assets/icons/rate.png', height: 12),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('التعليقات',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .023)),
-                      const SizedBox(
-                        width: 7,
-                      ),
-                      Image.asset('assets/icons/comment.png', height: 12),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('أعجبني',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .023)),
-                      const SizedBox(
-                        width: 7,
-                      ),
-                      Image.asset('assets/icons/like.png', height: 12),
-                    ],
+                    ),
                   ),
                 ],
               ),

@@ -25,7 +25,8 @@ XFile? video;
 XFile? photo;
   @override
   void initState() {
-    
+    BlocProvider.of<CreateStoryCubit>(context,listen: false).photo=null;
+    BlocProvider.of<CreateStoryCubit>(context,listen: false).video=null;
     super.initState();
   }
   @override
@@ -41,7 +42,7 @@ XFile? photo;
               backgroundColor: Colors.transparent,
               actions: <Widget>[
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async{
                     BlocProvider.of<CreateStoryCubit>(context, listen: false)
                         .createStory(CacheHelper.getString('tokens')!, contentController.text);
                     BlocProvider.of<StoriesCubit>(context,listen: false).fetchMyStories(CacheHelper.getString('tokens')!);

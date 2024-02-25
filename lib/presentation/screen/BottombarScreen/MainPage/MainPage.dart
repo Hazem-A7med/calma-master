@@ -1,13 +1,17 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nadek/core/utils/app_colors.dart';
 import 'package:nadek/data/model/BestUser.dart';
 import 'package:nadek/data/model/all_posts_model.dart';
+import 'package:nadek/logic/cubit/all_stories_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_cubit.dart';
 import 'package:nadek/logic/cubit/nadek_state.dart';
 import 'package:nadek/logic/cubit/my_posts_cubit.dart';
+import 'package:nadek/logic/cubit/post_edit_cubit.dart';
 import 'package:nadek/logic/states/all_posts_states.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/create_post_widget.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/widgets/post_item.dart';
@@ -29,6 +33,7 @@ import 'package:nadek/presentation/screen/BottombarScreen/Clubs/Clubs.dart';
 
 import '../../../../logic/cubit/all_posts_cubit.dart';
 import '../../../../logic/cubit/stories_cubit.dart';
+import '../../CreateTournament.dart';
 import '../../Maps.dart';
 import '../Champions/Champions.dart';
 import '../Groups/Groups_Page.dart';
@@ -51,10 +56,13 @@ class _MainPageState extends State<MainPage> {
   String? photo;
   String? name;
   String? id;
-
+  bool liked = false;
   int initialItem = 2;
   int currentScrollValue = 2;
-
+  void playLikeSound() async {
+    final cache = AudioPlayer();
+    await cache.play(AssetSource('sound/click.mp3'), volume: .1);
+  }
   @override
   void initState() {
     token = CacheHelper.getString('tokens');
@@ -73,7 +81,9 @@ class _MainPageState extends State<MainPage> {
 
     Future.delayed(
       Duration.zero,
-          () async {
+      () async {
+        BlocProvider.of<AllStoriesCubit>(context, listen: false)
+            .fetchAllStories(CacheHelper.getString('tokens')!);
         BlocProvider.of<AllPostsCubit>(context, listen: false)
             .fetchAllPosts(CacheHelper.getString('tokens')!);
       },
@@ -92,10 +102,8 @@ class _MainPageState extends State<MainPage> {
 
   GlobalKey<ScaffoldState> globalDrawer = GlobalKey();
 
-
   @override
   Widget build(BuildContext context) {
-
     final _advancedDrawerController = AdvancedDrawerController();
     return AdvancedDrawer(
       drawer: drawer(),
@@ -131,106 +139,180 @@ class _MainPageState extends State<MainPage> {
               }
             },
             builder: (context, state) {
-              return Column(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) =>
-                                        ProfileOfUser(
-                                            myProfile: true,
-                                            user_id: int.parse(id!))));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                CircleAvatar(
-                                    backgroundImage: NetworkImage('$photo')),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  '$name',
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 170, child: SwitchButton()),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              icon: const Icon(
-                                Icons.menu,
-                                size: 25,
-                              ),
-                              color: Colors.white,
-                              onPressed: () {
-                                _advancedDrawerController.showDrawer();
-                                // BlocProvider.of<NadekCubit>(context)
-                                //     .openDrawers();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 8,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+              return RefreshIndicator(
+                onRefresh: () async {
+                  BlocProvider.of<AllStoriesCubit>(context, listen: false)
+                      .fetchAllStories(CacheHelper.getString('tokens')!);
+                  BlocProvider.of<AllPostsCubit>(context, listen: false)
+                      .fetchAllPosts(CacheHelper.getString('tokens')!);
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const StoriesList(),
-                          const CreatePostWidget(),
-                          BlocBuilder<AllPostsCubit, AllPostsState>(
-                              builder: (context, state) {
-                                if (state is AllPostsLoadedState) {
-                                  List<AllPostsResponse>s = state.allPosts;
-                                  return ListView.separated(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) =>
-                                          PostItem(name: s[index].user?.name,
-                                            image: s[index].user?.photo,
-                                            description: s[index].allPost!.first.post,),
-                                      separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      itemCount: s.length);
-                                } else if (state is AllPostsLoadingState) {
-                                  return const Center(
-                                    child: PostShimmer(),
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: Text('Faild to load posts !!'),
-                                  );
-                                }
-                              }),
-
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) =>
+                                          const profile_page()));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (builder) => ProfileOfUser(
+                              //             myProfile: true,
+                              //             user_id: int.parse(id!))));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  CircleAvatar(
+                                      backgroundImage: NetworkImage('$photo')),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '$name',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 170, child: SwitchButton()),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.menu,
+                                  size: 25,
+                                ),
+                                color: Colors.white,
+                                onPressed: () {
+                                  _advancedDrawerController.showDrawer();
+                                  // BlocProvider.of<NadekCubit>(context)
+                                  //     .openDrawers();
+                                },
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 8,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const StoriesList(),
+                            const CreatePostWidget(),
+                            BlocBuilder<AllPostsCubit, AllPostsState>(
+                                builder: (context, state) {
+                              if (state is AllPostsLoadedState) {
+                                List<AllPostsResponse> s = state.allPosts;
+                                return ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) => PostItem(
+                                          onLike: () async {
+                                            playLikeSound();
+                                            setState(() {
+                                              if (s[index]
+                                                      .allPost
+                                                      ?.first
+                                                      .isLiked ==
+                                                  true) {
+                                                s[index]
+                                                    .allPost
+                                                    ?.first
+                                                    .isLiked = false;
+                                                BlocProvider
+                                                        .of<
+                                                                PostEditCubit>(
+                                                            context,
+                                                            listen: false)
+                                                    .likePost(
+                                                        token: CacheHelper
+                                                                .getString(
+                                                                    'tokens') ??
+                                                            '',
+                                                        postId: s[index]
+                                                            .allPost!
+                                                            .first
+                                                            .id
+                                                            .toString(),
+                                                        type: 'unlike');
+                                              } else {
+                                                s[index]
+                                                    .allPost
+                                                    ?.first
+                                                    .isLiked = true;
+                                                BlocProvider
+                                                        .of<
+                                                                PostEditCubit>(
+                                                            context,
+                                                            listen: false)
+                                                    .likePost(
+                                                        token: CacheHelper
+                                                                .getString(
+                                                                    'tokens') ??
+                                                            '',
+                                                        postId: s[index]
+                                                            .allPost!
+                                                            .first
+                                                            .id
+                                                            .toString(),
+                                                        type: 'like');
+                                              }
+                                            });
+                                          },
+                                          name: s[index].user?.name,
+                                          likeCount: s[index]
+                                              .allPost!
+                                              .first
+                                              .likeCount
+                                              .toString(),
+                                          image: s[index].user?.photo,
+                                          description:
+                                              s[index].allPost!.first.post,
+                                          liked:
+                                              s[index].allPost!.first.isLiked ??
+                                                  false,
+                                        ),
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                    itemCount: s.length);
+                              } else if (state is AllPostsLoadingState) {
+                                return const Center(
+                                  child: PostShimmer(),
+                                );
+                              } else {
+                                return const Center(
+                                  child: Text('Faild to load posts !!'),
+                                );
+                              }
+                            }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -239,12 +321,11 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-
   Widget drawer() {
     List<DrawerData> drawerData = [
       DrawerData(
         'الرئيسية',
-            () {
+        () {
           //Navigator.pop(context);
           Navigator.popAndPushNamed(context, '/MainPage');
         },
@@ -252,7 +333,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'المجموعات',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const groups_page()));
         },
@@ -260,7 +341,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'انتاج فيديوهات',
-            () {
+        () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const make_video_page()));
         },
@@ -268,7 +349,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الحساب',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const profile_page()));
         },
@@ -276,7 +357,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الفيديوهات',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const home_page()));
         },
@@ -284,7 +365,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'صرح',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Champions()));
         },
@@ -292,7 +373,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'الملاعب',
-            () {
+        () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const ReservationScreen()));
         },
@@ -300,7 +381,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'البحث',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const SearchScreen()));
         },
@@ -308,7 +389,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'أنواع الرياضات',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const TypeSports()));
         },
@@ -317,7 +398,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'خريطة اللاعبين',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Maps()));
         },
@@ -326,15 +407,15 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'بث مباشر',
-            () {
+        () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (c) => VirtualTournmentsList()));
+              MaterialPageRoute(builder: (c) => CreateTournament()));
         },
         Icon(Icons.live_tv, color: Colors.white.withOpacity(.4)),
       ),
       DrawerData(
         'خريطة الملاعب',
-            () {
+        () {
           Navigator.push(context,
               MaterialPageRoute(builder: (c) => const PlaygroundMaps()));
         },
@@ -342,7 +423,7 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'البطولات',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const Clubs()));
         },
@@ -350,89 +431,111 @@ class _MainPageState extends State<MainPage> {
       ),
       DrawerData(
         'المتجر',
-            () {
+        () {
           Navigator.push(
               context, MaterialPageRoute(builder: (c) => const shop_page()));
         },
         Icon(Icons.shopping_cart, color: Colors.white.withOpacity(.4)),
       ),
+      DrawerData(
+        'تسجيل الخروج',
+        () async {
+          BlocProvider.of<NadekCubit>(context)
+              .logout(token: CacheHelper.getString('tokens') ?? '');
+          CacheHelper.clear();
+          await Phoenix.rebirth(context);
+        },
+        Icon(Icons.logout, color: Colors.white.withOpacity(.4)),
+      ),
+      DrawerData(
+        'حذف الحساب',
+        () async {
+          BlocProvider.of<NadekCubit>(context).deleteAccount(
+            token: CacheHelper.getString('tokens') ?? '',
+            id: int.parse(id!),
+          );
+          CacheHelper.clear();
+          await Phoenix.rebirth(context);
+        },
+        Icon(Icons.delete_forever, color: Colors.white.withOpacity(.4)),
+      ),
     ];
     return Drawer(
-        backgroundColor: AppColors.scaffold,
-        child: Column(
-          children: [
-            const SizedBox(height: 90),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (builder) =>
-                            ProfileOfUser(
-                                myProfile: true, user_id: int.parse(id!))));
-              },
-              child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+      backgroundColor: AppColors.scaffold,
+      child: Column(
+        children: [
+          const SizedBox(height: 90),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (builder) => const profile_page()));
+            },
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    CircleAvatar(backgroundImage: NetworkImage('$photo')),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '$name',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: drawerData[index].action,
+                child: Container(
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
+                      drawerData[index].icon,
                       const SizedBox(
-                        width: 5,
+                        width: 15,
                       ),
-                      CircleAvatar(backgroundImage: NetworkImage('$photo')),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        '$name',
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      Text(drawerData[index].title,
+                          style:
+                              TextStyle(color: Colors.white.withOpacity(.4))),
+                      const Expanded(child: SizedBox())
                     ],
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
-                itemBuilder: (context, index) =>
-                    GestureDetector(
-                      onTap: drawerData[index].action,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          children: [
-                            drawerData[index].icon,
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Text(drawerData[index].title,
-                                style:
-                                TextStyle(color: Colors.white.withOpacity(.4))),
-                            const Expanded(child: SizedBox())
-                          ],
-                        ),
-                      ),
-                    ),
-                itemCount: drawerData.length,
-                separatorBuilder: (context, index) =>
-                    Divider(
-                      color: Colors.white.withOpacity(.3),
-                    ),
+              itemCount: drawerData.length,
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.white.withOpacity(.3),
               ),
             ),
-            Container(
-              color: Colors.blueGrey.withOpacity(.4),
-              height: 50,
-              child: Center(
-                  child: Text(
-                    'Calma App',
-                    style: TextStyle(color: Colors.white.withOpacity(.7)),
-                  )),
+          ),
+          Container(
+            color: Colors.blueGrey.withOpacity(.4),
+            height: 50,
+            child: Center(
+              child: Text(
+                'Calma App',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(.7),
+                ),
+              ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   _getLocation() async {

@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:nadek/presentation/screen/BottombarScreen/MainPage/creat_post_screen.dart';
 
 import '../../../../../sheard/constante/cache_hleper.dart';
+import '../../../CreateTournament.dart';
 import '../../../virtualTournments/virtual_tournments_list.dart';
 
 class CreatePostWidget extends StatefulWidget {
@@ -66,38 +67,51 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Text('المشاعر/الأنشطة',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .025)),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Image.asset('assets/icons/smile.png', height: 20),
-                    ],
+                  GestureDetector(onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreatePostScreen(),
+                      )),
+                    child: Row(
+                      children: [
+                        Text('المشاعر/الأنشطة',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(.3),
+                                fontSize:
+                                    MediaQuery.of(context).size.width * .025)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset('assets/icons/smile.png', height: 20),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Text('صورة / فيديو',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(.3),
-                              fontSize:
-                                  MediaQuery.of(context).size.width * .025)),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Image.asset('assets/icons/image.png', height: 20),
-                    ],
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreatePostScreen(),
+                        )),
+                    child: Row(
+                      children: [
+                        Text('صورة / فيديو',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(.3),
+                                fontSize:
+                                    MediaQuery.of(context).size.width * .025)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset('assets/icons/image.png', height: 20),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VirtualTournmentsList(),
+                            builder: (context) => CreateTournament(),
                           ));
                     },
                     child: Row(

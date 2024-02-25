@@ -20,6 +20,7 @@ import 'package:nadek/presentation/App_Route.dart';
 import 'package:nadek/sheard/constante/cache_hleper.dart';
 
 import 'logic/cubit/creat_story_cubit.dart';
+import 'logic/cubit/post_edit_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,6 +78,8 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => FacebookLoginCubit(),
+          ),BlocProvider(
+            create: (context) => PostEditCubit(),
           ),
         ],
         child: MaterialApp(

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../Make_Video_Page.dart';
 
 class SecIconsRow extends StatefulWidget {
   const SecIconsRow({Key? key}) : super(key: key);
@@ -20,9 +23,18 @@ class _SecIconsRowState extends State<SecIconsRow> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('assets/icons/hand.png', width: 25),
+                  GestureDetector(
+                      onTap: () {
+                        Fluttertoast.showToast(msg: 'soon...');
+                      },
+                      child: Image.asset('assets/icons/hand.png', width: 25)),
                   //  Image.asset('assets/icons/share.png', width: 25),
-                  Image.asset('assets/icons/video.png', width: 25),
+                  GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (c) => const make_video_page())),
+                      child: Image.asset('assets/icons/video.png', width: 25)),
                   GestureDetector(
                       onTap: () =>
                           Navigator.pushNamed(context, '/Update_Account'),

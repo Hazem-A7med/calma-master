@@ -38,6 +38,9 @@ class GoogleLogInCubit extends Cubit<GoogleLoginState> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+    print('googleAuth.accessToken');
+    print(googleAuth.accessToken);
+    print('googleAuth.accessToken');
     email = googleUser.email.toString();
     id = googleUser.id.toString();
     name = googleUser.displayName;

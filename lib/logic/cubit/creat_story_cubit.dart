@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nadek/logic/states/create_post_states.dart';
 
@@ -47,19 +47,25 @@ class CreateStoryCubit extends Cubit<CreateStoryState> {
     } else {
       Fluttertoast.showToast(msg: 'creating story ...');
       try {
-        if (photo == null && video == null) mediaType = 'text';
+        if (photo == null && video == null) {
+          mediaType = 'text';
+        } else if (photo!=null) {
+          mediaType = 'photo';
+        } else {
+          mediaType = 'video';
+        }
         Response response = await web_services.createStory(
             token: token, content: content, photo: photo ,video: video,mediaType: mediaType);
         print('UploadStory step 1');
         print(response.statusCode);
         print('UploadStory step 2');
         if (response.statusCode == 200) {
-          Fluttertoast.showToast(msg: response.body);
+          Fluttertoast.showToast(msg: 'created');
           emit(CreateStorySuccessState());
           Fluttertoast.showToast(msg: 'created');
           print('successsssssssssssssssssssssssssssss');
         } else {
-          Fluttertoast.showToast(msg: response.body);
+          Fluttertoast.showToast(msg: response.data);
           emit(CreateStoryErrorState());
           print('faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaile');
         }

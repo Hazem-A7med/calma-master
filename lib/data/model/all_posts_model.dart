@@ -82,14 +82,18 @@ class AllPost {
   String? post;
   String? mediaPath;
   String? mediaType;
+  int? likeCount;
+  bool? isLiked;
 
-  AllPost({this.id, this.post, this.mediaPath, this.mediaType});
+  AllPost({this.id, this.post, this.mediaPath, this.mediaType,this.isLiked,this.likeCount});
 
   AllPost.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     post = json['post'];
     mediaPath = json['media_path'];
     mediaType = json['media_type'];
+    likeCount = json['likes_count'];
+    isLiked = json['is_liked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,8 @@ class AllPost {
     data['post'] = post;
     data['media_path'] = mediaPath;
     data['media_type'] = mediaType;
+    data['is_liked'] = isLiked;
+    data['likes_count'] = likeCount;
     return data;
   }
 }

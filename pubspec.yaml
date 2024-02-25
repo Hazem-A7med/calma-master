@@ -65,6 +65,8 @@ dependencies:
   story_view:
   shimmer: ^3.0.0
   flutter_facebook_auth: ^5.0.7
+  audioplayers:
+  image: ^4.1.7
 
 dev_dependencies: 
   flutter_lints: ^2.0.1
@@ -72,7 +74,7 @@ dev_dependencies:
 
   flutter_test: 
     sdk: flutter
-    
+
 flutter_launcher_icons:
   ios: true
   android: true
@@ -86,6 +88,7 @@ flutter:
   assets: 
     - assets/images/
     - assets/icons/
+    - assets/sound/click.mp3
     - assets/icons/socialmedia/
     
   fonts: 
